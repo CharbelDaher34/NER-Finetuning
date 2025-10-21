@@ -1,1 +1,2 @@
-# NER-Finetuning
+Milestone 1: You’ll fine-tune Llama-3-8B and Mistral-7B with QLoRA on my conversational NER dataset, then evaluate against base models with P/R/F1, Set-Exact-Match, Empty-Set Accuracy, Valid-JSON%, Schema-valid%. Deliver LoRA adapters, merged HF models, and a quantized build for local inference (GGUF or AWQ/GPTQ) plus a simple inference script. Repo access and dataset provided. Non-negotiables: JSON-only outputs (empty list when absent), reproducible commands, no secrets in code, work via PRs.
+`
