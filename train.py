@@ -6,15 +6,18 @@ import wandb
 import logging
 from dotenv import load_dotenv
 from tqdm import tqdm
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     BitsAndBytesConfig,
+    EarlyStoppingCallback,
 )
-from peft import LoraConfig, get_peft_model
+from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
 from huggingface_hub import login
+from datetime import datetime
+import shutil
 
 
 # Configure logging
@@ -46,12 +49,13 @@ run = wandb.init(
 # Model configuration
 base_model = "Qwen/Qwen3-0.6B"
 new_model = "Qwen/Qwen3-0.6B-finetuned"
-torch_dtype = torch.float16
-attn_implementation = "eager"
+torch_dtype = torch.float16  # Use FP16 (BF16 not supported on this GPU with 4-bit quantization)
+# Use SDPA (Scaled Dot Product Attention) for faster inference, fallback to eager
+attn_implementation = "sdpa"  # Faster than eager, fallback to "eager" if needed
 device_id = torch.cuda.current_device() if torch.cuda.is_available() else 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# QLoRA configuration
+# QLoRA configuration for efficient 4-bit training
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -59,32 +63,58 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_use_double_quant=True,
 )
 
-# Load model
-model = AutoModelForCausalLM.from_pretrained(
-    base_model,
-    quantization_config=bnb_config,
-    device_map={"": device_id},
-    attn_implementation=attn_implementation
-)
+# Load model with optimizations
+logger.info(f"Attempting to load model with attention implementation: {attn_implementation}")
+try:
+    model = AutoModelForCausalLM.from_pretrained(
+        base_model,
+        quantization_config=bnb_config,
+        device_map={"": device_id},
+        attn_implementation=attn_implementation,
+        torch_dtype=torch_dtype,
+    )
+    logger.info(f"✓ Successfully loaded model with {attn_implementation}")
+except Exception as e:
+    logger.warning(f"Failed to load with {attn_implementation}: {str(e)}")
+    logger.info("Falling back to 'eager' (default attention)")
+    model = AutoModelForCausalLM.from_pretrained(
+        base_model,
+        quantization_config=bnb_config,
+        device_map={"": device_id},
+        attn_implementation="eager",
+        torch_dtype=torch_dtype,
+    )
+    logger.info("✓ Successfully loaded model with eager")
 
 # Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained(base_model)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
+# Sync model config with tokenizer to avoid mismatched PAD warnings
+model.config.pad_token_id = tokenizer.pad_token_id
+model.config.eos_token_id = tokenizer.eos_token_id
+logger.info(f"Tokenizer pad_token_id: {tokenizer.pad_token_id}, eos_token_id: {tokenizer.eos_token_id}")
 
 
-def format_chat_template(row):
+def parse_conversation_to_qa_pairs(conversation_text):
     """
-    Parses a conversation from a single string into a list of dictionaries
-    with "role" and "content" keys.
+    Parses a multi-turn conversation and extracts the report and all Q&A pairs.
+    
+    Returns:
+        List of dicts, each containing:
+        - 'system_prompt': The system message
+        - 'report': The crime report text
+        - 'question': A user question
+        - 'answer': The assistant's answer
     """
-    full_conversation = row['conversation']
-    lines = full_conversation.strip().split('\n')
+    lines = conversation_text.strip().split('\n')
     system_prompt = lines[0]
-    messages = [{"role": "system", "content": system_prompt}]
+    
+    # Parse all messages
+    messages = []
     current_role = None
     current_content = []
-
+    
     for line in lines[1:]:
         if line.startswith("User:"):
             if current_role == "assistant" and current_content:
@@ -98,17 +128,73 @@ def format_chat_template(row):
             current_content = [line.replace("Assistant:", "", 1).strip()]
         else:
             current_content.append(line)
-            
+    
     if current_role and current_content:
         messages.append({"role": current_role, "content": "\n".join(current_content)})
     
-    row['text'] = tokenizer.apply_chat_template(messages, tokenize=False)
-    return row
+    # Extract report (first user message) and Q&A pairs
+    if not messages or messages[0]["role"] != "user":
+        return []
+    
+    # Extract report and remove "Text:" prefix if present
+    report = messages[0]["content"]
+    if report.startswith("Text:"):
+        report = report[5:].strip()  # Remove "Text:" and any leading whitespace
+    
+    qa_pairs = []
+    
+    # Skip the first user message (report) and "I've read this text" assistant response
+    # Then pair up remaining user questions with assistant answers
+    i = 1
+    if i < len(messages) and messages[i]["role"] == "assistant":
+        i += 1  # Skip "I've read this text"
+    
+    while i < len(messages) - 1:
+        if messages[i]["role"] == "user" and messages[i+1]["role"] == "assistant":
+            qa_pairs.append({
+                "system_prompt": system_prompt,
+                "report": report,
+                "question": messages[i]["content"],
+                "answer": messages[i+1]["content"]
+            })
+            i += 2
+        else:
+            i += 1
+    
+    return qa_pairs
+
+
+def format_chat_template(conversation_row):
+    """
+    Takes a row with a multi-turn conversation and converts it into separate
+    training examples, one for each Q&A pair.
+    
+    Returns a list of formatted examples.
+    """
+    qa_pairs = parse_conversation_to_qa_pairs(conversation_row['conversation'])
+    
+    formatted_examples = []
+    for qa in qa_pairs:
+        # Create a conversation for each Q&A pair:
+        # System -> User(report with "Text:" prefix) -> Assistant(acknowledgment) -> User(question) -> Assistant(answer)
+        messages = [
+            {"role": "system", "content": qa["system_prompt"]},
+            {"role": "user", "content": f"Text:\n{qa['report']}"},
+            {"role": "assistant", "content": "I've read this text."},
+            {"role": "user", "content": qa["question"]},
+            {"role": "assistant", "content": qa["answer"]}
+        ]
+        
+        text = tokenizer.apply_chat_template(messages, tokenize=False)
+        formatted_examples.append({"text": text})
+    
+    return formatted_examples
 
 
 def infer_using_model(report_text, question, tok, mdl, dev):
     """
     Uses a pre-trained model to process a crime report and infer answers to specific questions.
+    Optimized for faster inference.
     """
     test_messages = [
         {"role": "system", "content": "A virtual assistant answers questions from a user based on the provided text, answer with a json object, key being the entity asked for by user and the value extracted from the text."},
@@ -122,7 +208,16 @@ def infer_using_model(report_text, question, tok, mdl, dev):
 
     input_token_length = inputs["input_ids"].shape[1]
     with torch.no_grad():
-        outputs = mdl.generate(**inputs, max_new_tokens=500, do_sample=False)
+        outputs = mdl.generate(
+            **inputs, 
+            max_new_tokens=150,  # Reduced from 500 - JSON responses are typically short
+            min_new_tokens=1,
+            do_sample=False,  # Greedy decoding (fastest)
+            num_beams=1,  # No beam search (faster)
+            pad_token_id=tok.pad_token_id,
+            eos_token_id=tok.eos_token_id,
+            use_cache=True,  # Enable KV cache for faster generation
+        )
 
     new_tokens = outputs[0, input_token_length:]
     response_text = tok.decode(new_tokens, skip_special_tokens=True)
@@ -198,8 +293,8 @@ def calculate_metrics(predicted, ground_truth):
     Calculate P/R/F1 metrics for a single prediction.
     
     Args:
-        predicted: dict with keys and list values
-        ground_truth: dict with keys and list values
+        predicted: dict with keys and list values (or single values)
+        ground_truth: dict with keys and list values (or single values)
     
     Returns:
         dict with tp, fp, fn counts
@@ -208,10 +303,16 @@ def calculate_metrics(predicted, ground_truth):
     gt_items = set()
     
     for key, values in predicted.items():
+        # Normalize to list if not already
+        if not isinstance(values, list):
+            values = [values]
         for val in values:
             pred_items.add((key, str(val)))
     
     for key, values in ground_truth.items():
+        # Normalize to list if not already
+        if not isinstance(values, list):
+            values = [values]
         for val in values:
             gt_items.add((key, str(val)))
     
@@ -234,6 +335,10 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
     """
     logger.info("Starting model evaluation on test dataset")
     logger.info(f"Dataset size: {len(test_dataset)} conversations")
+    
+    # Optimize for evaluation: disable gradients and set model to eval mode
+    mdl.eval()
+    torch.set_grad_enabled(False)
 
     all_results = []
 
@@ -318,8 +423,15 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
                     if gt_val != pred_val:
                         logger.info(f"  Difference in '{key}': GT={gt_val} vs Pred={pred_val}")
 
-            gt_is_empty = all(len(v) == 0 for v in ground_truth.values())
-            pred_is_empty = all(len(v) == 0 for v in predicted_json.values())
+            # Check if empty - handle both list and non-list values
+            gt_is_empty = all(
+                (len(v) == 0 if isinstance(v, list) else False) 
+                for v in ground_truth.values()
+            )
+            pred_is_empty = all(
+                (len(v) == 0 if isinstance(v, list) else False) 
+                for v in predicted_json.values()
+            )
 
             if gt_is_empty:
                 total_empty_sets += 1
@@ -410,64 +522,140 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
     return all_results, eval_summary
 
 
+# Configuration for dataset processing
+max_seq_length = 2048  # Max sequence length to prevent memory issues with long conversations
+logger.info(f"Maximum sequence length set to: {max_seq_length}")
+
 # Load and process dataset
 logger.info("Loading dataset from './dataset.jsonl'")
 dataset = load_dataset('json', data_files='./dataset.jsonl')
-logger.info(f"Dataset loaded with {len(dataset['train'])} samples")
+logger.info(f"Dataset loaded with {len(dataset['train'])} samples (multi-turn conversations)")
 
-train_dataset = dataset['train'].select(range(20))
-logger.info(f"Selected first 10 samples for training: {len(train_dataset)} samples")
+# Split dataset: 90% train / 10% test (using all conversations)
+logger.info("Splitting dataset: 90% train / 10% test")
+conversation_split = dataset['train'].select(range(10)).train_test_split(test_size=0.1, seed=42)
+train_conversations = conversation_split["train"]  # 90% of all conversations
+test_conversations = conversation_split["test"]    # 10% of all conversations
+logger.info(f"Split complete: {len(train_conversations)} conversations for training, {len(test_conversations)} for testing")
 
-logger.info("Processing dataset with chat template formatting")
-processed_dataset = train_dataset.map(format_chat_template, num_proc=2)
-logger.info("Dataset processing completed")
+# Process training conversations: split into individual Q&A pairs for training
+logger.info("Processing training dataset: splitting multi-turn conversations into individual Q&A pairs")
+all_training_examples = []
+for idx, row in enumerate(train_conversations):
+    qa_examples = format_chat_template(row)
+    all_training_examples.extend(qa_examples)
+    logger.info(f"Training conversation {idx}: Split into {len(qa_examples)} Q&A training examples")
 
-print("--- ORIGINAL CONVERSATION STRING ---")
-print(processed_dataset[0]['conversation'])
-print("\n" + "="*50 + "\n")
-print("--- PROCESSED AND TEMPLATED TEXT ---")
-print(processed_dataset[0]['text'])
+logger.info(f"Training dataset processing completed: {len(all_training_examples)} total training examples created")
 
-# Split dataset
-logger.info("Splitting dataset into train/test sets")
-data_split = processed_dataset.train_test_split(test_size=0.1, seed=42)
-train_data = data_split["train"]
-test_data = data_split["test"]
-logger.info(f"Dataset split completed: {len(train_data)} train samples, {len(test_data)} test samples")
+# Convert training examples to HuggingFace Dataset
+train_data = Dataset.from_list(all_training_examples)
 
-# LoRA configuration
+# Process test conversations: keep in original format for evaluation, but add 'text' field
+logger.info("Processing test dataset: formatting for evaluation (keeping multi-turn structure)")
+
+def format_full_conversation_for_evaluation(row):
+    """Format the full multi-turn conversation for evaluation."""
+    qa_pairs = parse_conversation_to_qa_pairs(row['conversation'])
+    if qa_pairs:
+        # Create the full multi-turn conversation with all Q&A pairs
+        # Add "Text:" prefix to match inference format
+        messages = [
+            {"role": "system", "content": qa_pairs[0]["system_prompt"]},
+            {"role": "user", "content": f"Text:\n{qa_pairs[0]['report']}"},
+            {"role": "assistant", "content": "I've read this text."}
+        ]
+        
+        # Add all Q&A pairs
+        for qa in qa_pairs:
+            messages.append({"role": "user", "content": qa["question"]})
+            messages.append({"role": "assistant", "content": qa["answer"]})
+        
+        row['text'] = tokenizer.apply_chat_template(messages, tokenize=False)
+    else:
+        row['text'] = ""
+    return row
+
+test_data = test_conversations.map(format_full_conversation_for_evaluation)
+
+print("\n" + "="*60)
+print("DATA PREPARATION SUMMARY")
+print("="*60)
+print(f"Original conversations selected: {len(train_conversations)}")
+print(f"Training examples created: {len(train_data)}")
+print(f"Expansion ratio: {len(train_data) / len(train_conversations):.1f}x")
+print(f"Test conversations (multi-turn): {len(test_data)}")
+print("="*60)
+
+print("\n--- EXAMPLE TRAINING INSTANCE ---")
+print(train_data[0]['text'][:800])
+print("...\n")
+
+logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(test_data)} test conversations")
+
+# LoRA configuration (adjusted for efficiency with larger dataset)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    lora_dropout=0.05,
+    r=8,                    # Smaller rank → less overfitting
+    lora_alpha=16,
+    lora_dropout=0.1,       # Higher dropout for better generalization
     bias="none",
     task_type="CAUSAL_LM",
-    target_modules=['up_proj', 'down_proj']
+    target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj']
 )
-logger.info("Applying LoRA to model")
-model = get_peft_model(model, peft_config)
-logger.info("LoRA configuration applied successfully")
+logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
-# Training configuration
+# Training configuration (optimized for ~3,750 training examples)
 logger.info("Setting up training configuration")
 sft_config = SFTConfig(
     output_dir=new_model,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    gradient_accumulation_steps=2,
-    num_train_epochs=1,
-    logging_steps=1,
-    warmup_steps=2,
-    learning_rate=1e-4,
-    fp16=True,
+    
+    # Batch settings
+    per_device_train_batch_size=2,        # 2 samples/GPU
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=8,        # Effective batch ≈ 16 samples/step
+    
+    # Epochs & learning rate
+    num_train_epochs=3,                   # 3 full passes through dataset
+    learning_rate=3e-5,                   # Moderate, safe for QLoRA + dataset size
+    lr_scheduler_type="cosine",
+    warmup_ratio=0.05,                    # 5% of steps for LR ramp-up
+    
+    # Precision & stability
+    fp16=True,                            # Use FP16 (BF16 not supported on this GPU)
     bf16=False,
-    group_by_length=False,
-    report_to="wandb",
+    max_grad_norm=1.0,                    # Gradient clipping to prevent explosions
+    gradient_checkpointing=True,
+    gradient_checkpointing_kwargs={"use_reentrant": False},
+    
+    # Regularization
+    weight_decay=0.01,
+    group_by_length=True,                 # Improves efficiency
+    
+    # Logging & evaluation
+    logging_steps=10,
+    eval_strategy="steps",
+    eval_steps=100,                       # Evaluate every 100 steps
+    save_strategy="steps",
+    save_steps=100,
+    save_total_limit=2,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+    
+    # Dataset details
     dataset_text_field="text",
     packing=False,
+    report_to="wandb",
 )
-logger.info("Training configuration created")
+logger.info(f"Training configuration created - Scheduler: {sft_config.lr_scheduler_type}, LR: {sft_config.learning_rate}")
+
+# Initialize early stopping callback
+logger.info("Creating early stopping callback")
+early_stop_callback = EarlyStoppingCallback(
+    early_stopping_patience=3,
+    early_stopping_threshold=0.01
+)
 
 # Initialize trainer
 logger.info("Initializing SFTTrainer")
@@ -478,40 +666,283 @@ trainer = SFTTrainer(
     eval_dataset=test_data,
     peft_config=peft_config,
     args=sft_config,
+    callbacks=[early_stop_callback],
 )
 logger.info("Trainer initialized successfully")
 
-# Uncomment to train
-# logger.info("Starting training...")
-# trainer.train()
-# logger.info("Training completed")
+# Optional: Check for NaN parameters before training (safety check)
+nan_params = []
+for name, param in model.named_parameters():
+    if torch.isnan(param).any():
+        nan_params.append(name)
+if nan_params:
+    logger.warning(f"⚠️ NaN detected in parameters: {nan_params}")
+else:
+    logger.info("✓ All parameters initialized correctly (no NaNs)")
 
-logger.info("Finishing wandb session")
-wandb.finish()
+# Evaluate model BEFORE training (baseline)
+logger.info("\n" + "="*80)
+logger.info("BASELINE EVALUATION - Model performance BEFORE training")
+logger.info("="*80 + "\n")
 model.config.use_cache = True
-logger.info("Model cache enabled")
+results_pre, summary_pre = test_model_on_dataset(test_data, tokenizer, model, device)
+logger.info("Baseline evaluation completed")
 
-# Test model on dataset
-logger.info("Starting model evaluation on test dataset")
-results, summary = test_model_on_dataset(test_data, tokenizer, model, device)
-logger.info("Model evaluation completed")
+# Log pre-training metrics to wandb
+wandb.log({
+    "pre_training/precision": summary_pre['precision'],
+    "pre_training/recall": summary_pre['recall'],
+    "pre_training/f1": summary_pre['f1'],
+    "pre_training/set_exact_match": summary_pre['set_exact_match'],
+    "pre_training/empty_set_accuracy": summary_pre['empty_set_accuracy'],
+    "pre_training/valid_json_pct": summary_pre['valid_json_pct'],
+    "pre_training/schema_valid_pct": summary_pre['schema_valid_pct'],
+    "pre_training/total_tp": summary_pre['total_tp'],
+    "pre_training/total_fp": summary_pre['total_fp'],
+    "pre_training/total_fn": summary_pre['total_fn'],
+    "pre_training/total_exact_matches": summary_pre['total_exact_matches'],
+})
 
 print("\n" + "="*60)
-print("EVALUATION SUMMARY")
+print("PRE-TRAINING EVALUATION SUMMARY")
 print("="*60)
-print(f"Total Predictions: {summary['total_predictions']}")
+print(f"Total Predictions: {summary_pre['total_predictions']}")
 print("\nCore Metrics:")
-print(f"  Precision: {summary['precision']:.4f}")
-print(f"  Recall: {summary['recall']:.4f}")
-print(f"  F1 Score: {summary['f1']:.4f}")
+print(f"  Precision: {summary_pre['precision']:.4f}")
+print(f"  Recall: {summary_pre['recall']:.4f}")
+print(f"  F1 Score: {summary_pre['f1']:.4f}")
 print("\nAccuracy Metrics:")
-print(f"  Set-Exact-Match: {summary['set_exact_match']:.4f} ({summary['total_exact_matches']}/{summary['total_predictions']})")
-print(f"  Empty-Set Accuracy: {summary['empty_set_accuracy']:.4f} ({summary['total_empty_set_correct']}/{summary['total_empty_sets']})")
+print(f"  Set-Exact-Match: {summary_pre['set_exact_match']:.4f} ({summary_pre['total_exact_matches']}/{summary_pre['total_predictions']})")
+print(f"  Empty-Set Accuracy: {summary_pre['empty_set_accuracy']:.4f} ({summary_pre['total_empty_set_correct']}/{summary_pre['total_empty_sets']})")
 print("\nFormat Validation:")
-print(f"  Valid JSON %: {summary['valid_json_pct']:.4f}")
-print(f"  Schema Valid %: {summary['schema_valid_pct']:.4f}")
-print("\nDetailed Counts:")
-print(f"  True Positives: {summary['total_tp']}")
-print(f"  False Positives: {summary['total_fp']}")
-print(f"  False Negatives: {summary['total_fn']}")
+print(f"  Valid JSON %: {summary_pre['valid_json_pct']:.4f}")
+print(f"  Schema Valid %: {summary_pre['schema_valid_pct']:.4f}")
+print("="*60 + "\n")
+
+# Train the model
+logger.info("Starting training...")
+# Re-enable gradients for training (disabled during evaluation)
+torch.set_grad_enabled(True)
+model.train()
+model.config.use_cache = False
+trainer.train()
+logger.info("Training completed")
+
+# Evaluate model AFTER training
+logger.info("\n" + "="*80)
+logger.info("POST-TRAINING EVALUATION - Model performance AFTER training")
+logger.info("="*80 + "\n")
+model.config.use_cache = True
+results_post, summary_post = test_model_on_dataset(test_data, tokenizer, model, device)
+logger.info("Post-training evaluation completed")
+
+# Log post-training metrics to wandb
+wandb.log({
+    "post_training/precision": summary_post['precision'],
+    "post_training/recall": summary_post['recall'],
+    "post_training/f1": summary_post['f1'],
+    "post_training/set_exact_match": summary_post['set_exact_match'],
+    "post_training/empty_set_accuracy": summary_post['empty_set_accuracy'],
+    "post_training/valid_json_pct": summary_post['valid_json_pct'],
+    "post_training/schema_valid_pct": summary_post['schema_valid_pct'],
+    "post_training/total_tp": summary_post['total_tp'],
+    "post_training/total_fp": summary_post['total_fp'],
+    "post_training/total_fn": summary_post['total_fn'],
+    "post_training/total_exact_matches": summary_post['total_exact_matches'],
+})
+
+# Calculate improvement
+improvement = {
+    "precision_delta": summary_post['precision'] - summary_pre['precision'],
+    "recall_delta": summary_post['recall'] - summary_pre['recall'],
+    "f1_delta": summary_post['f1'] - summary_pre['f1'],
+    "set_exact_match_delta": summary_post['set_exact_match'] - summary_pre['set_exact_match'],
+}
+
+wandb.log({
+    "improvement/precision_delta": improvement['precision_delta'],
+    "improvement/recall_delta": improvement['recall_delta'],
+    "improvement/f1_delta": improvement['f1_delta'],
+    "improvement/set_exact_match_delta": improvement['set_exact_match_delta'],
+})
+
+print("\n" + "="*60)
+print("POST-TRAINING EVALUATION SUMMARY")
 print("="*60)
+print(f"Total Predictions: {summary_post['total_predictions']}")
+print("\nCore Metrics:")
+print(f"  Precision: {summary_post['precision']:.4f}")
+print(f"  Recall: {summary_post['recall']:.4f}")
+print(f"  F1 Score: {summary_post['f1']:.4f}")
+print("\nAccuracy Metrics:")
+print(f"  Set-Exact-Match: {summary_post['set_exact_match']:.4f} ({summary_post['total_exact_matches']}/{summary_post['total_predictions']})")
+print(f"  Empty-Set Accuracy: {summary_post['empty_set_accuracy']:.4f} ({summary_post['total_empty_set_correct']}/{summary_post['total_empty_sets']})")
+print("\nFormat Validation:")
+print(f"  Valid JSON %: {summary_post['valid_json_pct']:.4f}")
+print(f"  Schema Valid %: {summary_post['schema_valid_pct']:.4f}")
+print("="*60)
+
+print("\n" + "="*60)
+print("IMPROVEMENT SUMMARY (Post - Pre)")
+print("="*60)
+print(f"  Precision: {improvement['precision_delta']:+.4f}")
+print(f"  Recall: {improvement['recall_delta']:+.4f}")
+print(f"  F1 Score: {improvement['f1_delta']:+.4f}")
+print(f"  Set-Exact-Match: {improvement['set_exact_match_delta']:+.4f}")
+print("="*60)
+
+# Create results folder with timestamp
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+results_folder = f"training_results_{timestamp}"
+os.makedirs(results_folder, exist_ok=True)
+logger.info(f"Created results folder: {results_folder}")
+
+# Save pre-training metrics
+logger.info("Saving pre-training metrics...")
+with open(os.path.join(results_folder, "metrics_pre_training.json"), 'w') as f:
+    json.dump(summary_pre, f, indent=2)
+
+with open(os.path.join(results_folder, "detailed_results_pre_training.json"), 'w') as f:
+    json.dump(results_pre, f, indent=2, default=str)
+
+# Save post-training metrics
+logger.info("Saving post-training metrics...")
+with open(os.path.join(results_folder, "metrics_post_training.json"), 'w') as f:
+    json.dump(summary_post, f, indent=2)
+
+with open(os.path.join(results_folder, "detailed_results_post_training.json"), 'w') as f:
+    json.dump(results_post, f, indent=2, default=str)
+
+# Save improvement deltas
+logger.info("Saving improvement metrics...")
+with open(os.path.join(results_folder, "metrics_improvement.json"), 'w') as f:
+    json.dump(improvement, f, indent=2)
+
+# Save training history from trainer
+logger.info("Saving training history...")
+training_history = {
+    "train_loss_history": [log for log in trainer.state.log_history if "loss" in log],
+    "final_train_loss": trainer.state.log_history[-1].get("loss", None) if trainer.state.log_history else None,
+    "total_steps": trainer.state.global_step,
+    "epochs_completed": trainer.state.epoch,
+}
+with open(os.path.join(results_folder, "training_history.json"), 'w') as f:
+    json.dump(training_history, f, indent=2, default=str)
+
+# Save training configuration
+logger.info("Saving training configuration...")
+training_config = {
+    "base_model": base_model,
+    "output_model": new_model,
+    "lora_config": {
+        "r": peft_config.r,
+        "lora_alpha": peft_config.lora_alpha,
+        "lora_dropout": peft_config.lora_dropout,
+        "target_modules": list(peft_config.target_modules) if isinstance(peft_config.target_modules, set) else peft_config.target_modules,
+    },
+    "training_args": {
+        "num_train_epochs": sft_config.num_train_epochs,
+        "per_device_train_batch_size": sft_config.per_device_train_batch_size,
+        "gradient_accumulation_steps": sft_config.gradient_accumulation_steps,
+        "learning_rate": sft_config.learning_rate,
+        "warmup_steps": sft_config.warmup_steps,
+        "fp16": sft_config.fp16,
+    },
+    "dataset_info": {
+        "train_samples": len(train_data),
+        "test_samples": len(test_data),
+    }
+}
+with open(os.path.join(results_folder, "training_config.json"), 'w') as f:
+    json.dump(training_config, f, indent=2)
+
+# Save LoRA adapter
+logger.info("Saving LoRA adapter...")
+adapter_folder = os.path.join(results_folder, "lora_adapter")
+trainer.model.save_pretrained(adapter_folder)
+tokenizer.save_pretrained(adapter_folder)
+logger.info(f"LoRA adapter saved to: {adapter_folder}")
+
+# Copy evaluation log to results folder
+if os.path.exists("evaluation.log"):
+    shutil.copy("evaluation.log", os.path.join(results_folder, "evaluation.log"))
+    logger.info("Copied evaluation.log to results folder")
+
+# Create summary report
+logger.info("Creating summary report...")
+summary_report = f"""
+TRAINING SUMMARY REPORT
+{'='*80}
+
+Training Completed: {timestamp}
+Results Folder: {results_folder}
+
+MODEL CONFIGURATION
+{'='*80}
+Base Model: {base_model}
+Output Model: {new_model}
+
+DATASET
+{'='*80}
+Training Samples: {len(train_data)}
+Test Samples: {len(test_data)}
+
+PRE-TRAINING METRICS
+{'='*80}
+Precision:        {summary_pre['precision']:.4f}
+Recall:           {summary_pre['recall']:.4f}
+F1 Score:         {summary_pre['f1']:.4f}
+Set-Exact-Match:  {summary_pre['set_exact_match']:.4f}
+Valid JSON %:     {summary_pre['valid_json_pct']:.4f}
+
+POST-TRAINING METRICS
+{'='*80}
+Precision:        {summary_post['precision']:.4f}
+Recall:           {summary_post['recall']:.4f}
+F1 Score:         {summary_post['f1']:.4f}
+Set-Exact-Match:  {summary_post['set_exact_match']:.4f}
+Valid JSON %:     {summary_post['valid_json_pct']:.4f}
+
+IMPROVEMENT (Post - Pre)
+{'='*80}
+Precision:        {improvement['precision_delta']:+.4f}
+Recall:           {improvement['recall_delta']:+.4f}
+F1 Score:         {improvement['f1_delta']:+.4f}
+Set-Exact-Match:  {improvement['set_exact_match_delta']:+.4f}
+
+FILES SAVED
+{'='*80}
+- metrics_pre_training.json          : Pre-training evaluation summary
+- detailed_results_pre_training.json : Detailed per-question pre-training results
+- metrics_post_training.json         : Post-training evaluation summary
+- detailed_results_post_training.json: Detailed per-question post-training results
+- metrics_improvement.json           : Improvement deltas
+- training_history.json              : Training loss history and steps
+- training_config.json               : Full training configuration
+- lora_adapter/                      : LoRA adapter weights and tokenizer
+- evaluation.log                     : Full evaluation logs
+- summary_report.txt                 : This report
+"""
+
+with open(os.path.join(results_folder, "summary_report.txt"), 'w') as f:
+    f.write(summary_report)
+
+print("\n" + "="*80)
+print("RESULTS SAVED")
+print("="*80)
+print(f"All metrics and model saved to: {results_folder}/")
+print("\nContents:")
+print("  📊 metrics_pre_training.json")
+print("  📊 metrics_post_training.json")
+print("  📊 metrics_improvement.json")
+print("  📈 training_history.json")
+print("  ⚙️  training_config.json")
+print("  🤖 lora_adapter/ (model weights)")
+print("  📝 evaluation.log")
+print("  📄 summary_report.txt")
+print("="*80)
+
+logger.info(f"All results saved successfully to {results_folder}")
+logger.info("Finishing wandb session")
+wandb.finish()
+logger.info("Training and evaluation pipeline completed successfully")
