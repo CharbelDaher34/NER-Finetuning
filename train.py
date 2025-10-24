@@ -526,17 +526,23 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
 max_seq_length = 2048  # Max sequence length to prevent memory issues with long conversations
 logger.info(f"Maximum sequence length set to: {max_seq_length}")
 
-# Load and process dataset
-logger.info("Loading dataset from './dataset.jsonl'")
+# Load training dataset and split into train/eval
+logger.info("Loading training dataset from './dataset.jsonl'")
 dataset = load_dataset('json', data_files='./dataset.jsonl')
-logger.info(f"Dataset loaded with {len(dataset['train'])} samples (multi-turn conversations)")
+logger.info(f"Training dataset loaded with {len(dataset['train'])} samples (multi-turn conversations)")
 
-# Split dataset: 90% train / 10% test (using all conversations)
-logger.info("Splitting dataset: 90% train / 10% test")
+# Split dataset: 90% train / 10% eval (for training validation)
+logger.info("Splitting training dataset: 90% train / 10% eval")
 conversation_split = dataset['train'].select(range(10)).train_test_split(test_size=0.1, seed=42)
-train_conversations = conversation_split["train"]  # 90% of all conversations
-test_conversations = conversation_split["test"]    # 10% of all conversations
-logger.info(f"Split complete: {len(train_conversations)} conversations for training, {len(test_conversations)} for testing")
+train_conversations = conversation_split["train"]  # 90% for training
+eval_conversations = conversation_split["test"]    # 10% for evaluation during training
+logger.info(f"Split complete: {len(train_conversations)} conversations for training, {len(eval_conversations)} for evaluation")
+
+# Load separate test dataset for final evaluation
+logger.info("Loading test dataset from './test_dataset.jsonl'")
+test_dataset = load_dataset('json', data_files='./test_dataset.jsonl')
+test_conversations = test_dataset['train'].select(range(2))  # The 'train' split contains all test data
+logger.info(f"Test dataset loaded with {len(test_conversations)} conversations for final evaluation")
 
 # Process training conversations: split into individual Q&A pairs for training
 logger.info("Processing training dataset: splitting multi-turn conversations into individual Q&A pairs")
@@ -551,8 +557,21 @@ logger.info(f"Training dataset processing completed: {len(all_training_examples)
 # Convert training examples to HuggingFace Dataset
 train_data = Dataset.from_list(all_training_examples)
 
-# Process test conversations: keep in original format for evaluation, but add 'text' field
-logger.info("Processing test dataset: formatting for evaluation (keeping multi-turn structure)")
+# Process eval conversations: split into individual Q&A pairs for validation during training
+logger.info("Processing eval dataset: splitting multi-turn conversations into individual Q&A pairs")
+all_eval_examples = []
+for idx, row in enumerate(eval_conversations):
+    qa_examples = format_chat_template(row)
+    all_eval_examples.extend(qa_examples)
+    logger.info(f"Eval conversation {idx}: Split into {len(qa_examples)} Q&A eval examples")
+
+logger.info(f"Eval dataset processing completed: {len(all_eval_examples)} total eval examples created")
+
+# Convert eval examples to HuggingFace Dataset
+eval_data = Dataset.from_list(all_eval_examples)
+
+# Process test conversations: keep in original format for final evaluation, but add 'text' field
+logger.info("Processing test dataset: formatting for final evaluation (keeping multi-turn structure)")
 
 def format_full_conversation_for_evaluation(row):
     """Format the full multi-turn conversation for evaluation."""
@@ -581,9 +600,11 @@ test_data = test_conversations.map(format_full_conversation_for_evaluation)
 print("\n" + "="*60)
 print("DATA PREPARATION SUMMARY")
 print("="*60)
-print(f"Original conversations selected: {len(train_conversations)}")
+print(f"Training conversations: {len(train_conversations)}")
 print(f"Training examples created: {len(train_data)}")
 print(f"Expansion ratio: {len(train_data) / len(train_conversations):.1f}x")
+print(f"Eval conversations: {len(eval_conversations)}")
+print(f"Eval examples created: {len(eval_data)}")
 print(f"Test conversations (multi-turn): {len(test_data)}")
 print("="*60)
 
@@ -591,7 +612,7 @@ print("\n--- EXAMPLE TRAINING INSTANCE ---")
 print(train_data[0]['text'][:800])
 print("...\n")
 
-logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(test_data)} test conversations")
+logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(eval_data)} eval examples, {len(test_data)} test conversations")
 
 # LoRA configuration (adjusted for efficiency with larger dataset)
 logger.info("Configuring LoRA parameters")
@@ -663,7 +684,7 @@ trainer = SFTTrainer(
     model=model,
     processing_class=tokenizer,
     train_dataset=train_data,
-    eval_dataset=test_data,
+    eval_dataset=eval_data,
     peft_config=peft_config,
     args=sft_config,
     callbacks=[early_stop_callback],
@@ -791,9 +812,11 @@ print(f"  F1 Score: {improvement['f1_delta']:+.4f}")
 print(f"  Set-Exact-Match: {improvement['set_exact_match_delta']:+.4f}")
 print("="*60)
 
-# Create results folder with timestamp
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-results_folder = f"training_results_{timestamp}"
+# Create results folder with timestamp, take only day, hour and minute
+day = datetime.now().strftime("%Y%m%d")
+hour = datetime.now().strftime("%H")
+minute = datetime.now().strftime("%M")
+results_folder = f"results/training_results_{day}_{hour}_{minute}"
 os.makedirs(results_folder, exist_ok=True)
 logger.info(f"Created results folder: {results_folder}")
 
@@ -850,6 +873,7 @@ training_config = {
     },
     "dataset_info": {
         "train_samples": len(train_data),
+        "eval_samples": len(eval_data),
         "test_samples": len(test_data),
     }
 }
@@ -874,7 +898,7 @@ summary_report = f"""
 TRAINING SUMMARY REPORT
 {'='*80}
 
-Training Completed: {timestamp}
+Training Completed: {day}_{hour}_{minute}
 Results Folder: {results_folder}
 
 MODEL CONFIGURATION
@@ -885,6 +909,7 @@ Output Model: {new_model}
 DATASET
 {'='*80}
 Training Samples: {len(train_data)}
+Eval Samples: {len(eval_data)}
 Test Samples: {len(test_data)}
 
 PRE-TRAINING METRICS
