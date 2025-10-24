@@ -1,12 +1,13 @@
 import os
 import re
 import json
+import gc
 import torch
 import wandb
 import logging
 from dotenv import load_dotenv
 from tqdm import tqdm
-from datasets import load_dataset, Dataset
+from datasets import load_dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -467,6 +468,9 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
                 current_exact = total_exact_matches / total_predictions if total_predictions > 0 else 0.0
                 logger.info(f"PROGRESS: Processed {total_predictions} Q&A pairs so far. "
                           f"Running metrics: P={current_precision:.3f}, R={current_recall:.3f}, Exact={current_exact:.3f}")
+                # Clear cache periodically during evaluation
+                gc.collect()
+                torch.cuda.empty_cache()
     
     precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0.0
     recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0.0
@@ -523,52 +527,70 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
 
 
 # Configuration for dataset processing
-max_seq_length = 2048  # Max sequence length to prevent memory issues with long conversations
+max_seq_length = 1024  # Reduced from 2048 for memory efficiency
 logger.info(f"Maximum sequence length set to: {max_seq_length}")
 
-# Load training dataset and split into train/eval
+# Load training dataset with memory mapping (doesn't load everything into RAM)
 logger.info("Loading training dataset from './dataset.jsonl'")
-dataset = load_dataset('json', data_files='./dataset.jsonl')
+dataset = load_dataset('json', data_files='./dataset.jsonl', keep_in_memory=False)
 logger.info(f"Training dataset loaded with {len(dataset['train'])} samples (multi-turn conversations)")
 
 # Split dataset: 90% train / 10% eval (for training validation)
 logger.info("Splitting training dataset: 90% train / 10% eval")
-conversation_split = dataset['train'].select(range(10)).train_test_split(test_size=0.1, seed=42)
+conversation_split = dataset['train'].train_test_split(test_size=0.1, seed=42)
 train_conversations = conversation_split["train"]  # 90% for training
 eval_conversations = conversation_split["test"]    # 10% for evaluation during training
 logger.info(f"Split complete: {len(train_conversations)} conversations for training, {len(eval_conversations)} for evaluation")
 
 # Load separate test dataset for final evaluation
 logger.info("Loading test dataset from './test_dataset.jsonl'")
-test_dataset = load_dataset('json', data_files='./test_dataset.jsonl')
-test_conversations = test_dataset['train'].select(range(2))  # The 'train' split contains all test data
+test_dataset = load_dataset('json', data_files='./test_dataset.jsonl', keep_in_memory=False)
+test_conversations = test_dataset['train']  # The 'train' split contains all test data
 logger.info(f"Test dataset loaded with {len(test_conversations)} conversations for final evaluation")
 
-# Process training conversations: split into individual Q&A pairs for training
-logger.info("Processing training dataset: splitting multi-turn conversations into individual Q&A pairs")
-all_training_examples = []
-for idx, row in enumerate(train_conversations):
-    qa_examples = format_chat_template(row)
-    all_training_examples.extend(qa_examples)
-    logger.info(f"Training conversation {idx}: Split into {len(qa_examples)} Q&A training examples")
 
-logger.info(f"Training dataset processing completed: {len(all_training_examples)} total training examples created")
+def process_conversation_batch(examples):
+    """
+    Process a batch of conversations on-the-fly (lazy processing).
+    Splits multi-turn conversations into individual Q&A pairs.
+    """
+    all_texts = []
+    for conversation in examples['conversation']:
+        qa_pairs = parse_conversation_to_qa_pairs(conversation)
+        for qa in qa_pairs:
+            messages = [
+                {"role": "system", "content": qa["system_prompt"]},
+                {"role": "user", "content": f"Text:\n{qa['report']}"},
+                {"role": "assistant", "content": "I've read this text."},
+                {"role": "user", "content": qa["question"]},
+                {"role": "assistant", "content": qa["answer"]}
+            ]
+            text = tokenizer.apply_chat_template(messages, tokenize=False)
+            all_texts.append(text)
+    return {"text": all_texts}
 
-# Convert training examples to HuggingFace Dataset
-train_data = Dataset.from_list(all_training_examples)
 
-# Process eval conversations: split into individual Q&A pairs for validation during training
-logger.info("Processing eval dataset: splitting multi-turn conversations into individual Q&A pairs")
-all_eval_examples = []
-for idx, row in enumerate(eval_conversations):
-    qa_examples = format_chat_template(row)
-    all_eval_examples.extend(qa_examples)
-    logger.info(f"Eval conversation {idx}: Split into {len(qa_examples)} Q&A eval examples")
+# Process training conversations: lazy map instead of loading all into memory
+logger.info("Processing training dataset: setting up lazy processing for Q&A pairs")
+train_data = train_conversations.map(
+    process_conversation_batch,
+    batched=True,
+    batch_size=1,  # Process one conversation at a time
+    remove_columns=train_conversations.column_names,
+    desc="Processing training conversations"
+)
+logger.info(f"Training dataset processing completed: {len(train_data)} total training examples created")
 
-logger.info(f"Eval dataset processing completed: {len(all_eval_examples)} total eval examples created")
-
-# Convert eval examples to HuggingFace Dataset
-eval_data = Dataset.from_list(all_eval_examples)
+# Process eval conversations: lazy map
+logger.info("Processing eval dataset: setting up lazy processing for Q&A pairs")
+eval_data = eval_conversations.map(
+    process_conversation_batch,
+    batched=True,
+    batch_size=1,  # Process one conversation at a time
+    remove_columns=eval_conversations.column_names,
+    desc="Processing eval conversations"
+)
+logger.info(f"Eval dataset processing completed: {len(eval_data)} total eval examples created")
 
 # Process test conversations: keep in original format for final evaluation, but add 'text' field
 logger.info("Processing test dataset: formatting for final evaluation (keeping multi-turn structure)")
@@ -614,62 +636,62 @@ print("...\n")
 
 logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(eval_data)} eval examples, {len(test_data)} test conversations")
 
-# LoRA configuration (adjusted for efficiency with larger dataset)
+# LoRA configuration (optimized for memory efficiency)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=8,                    # Smaller rank → less overfitting
-    lora_alpha=16,
-    lora_dropout=0.1,       # Higher dropout for better generalization
+    r=4,                    # Reduced from 8 for memory efficiency
+    lora_alpha=8,           # Scaled proportionally
+    lora_dropout=0.1,
     bias="none",
     task_type="CAUSAL_LM",
-    target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj']
+    target_modules=['q_proj', 'v_proj']  # Reduced to only essential modules for memory efficiency
 )
 logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
-# Training configuration (optimized for ~3,750 training examples)
+# Training configuration (memory-optimized)
 logger.info("Setting up training configuration")
 sft_config = SFTConfig(
     output_dir=new_model,
     
-    # Batch settings
-    per_device_train_batch_size=2,        # 2 samples/GPU
-    per_device_eval_batch_size=2,
-    gradient_accumulation_steps=8,        # Effective batch ≈ 16 samples/step
+    # Batch settings (memory-optimized)
+    per_device_train_batch_size=1,        # Reduced to 1 for memory efficiency
+    per_device_eval_batch_size=1,         # Reduced to 1 for memory efficiency
+    gradient_accumulation_steps=16,       # Increased to maintain effective batch size ≈ 16
     
     # Epochs & learning rate
-    num_train_epochs=3,                   # 3 full passes through dataset
-    learning_rate=3e-5,                   # Moderate, safe for QLoRA + dataset size
+    num_train_epochs=3,
+    learning_rate=3e-5,
     lr_scheduler_type="cosine",
-    warmup_ratio=0.05,                    # 5% of steps for LR ramp-up
+    warmup_ratio=0.05,
     
     # Precision & stability
-    fp16=True,                            # Use FP16 (BF16 not supported on this GPU)
+    fp16=True,
     bf16=False,
-    max_grad_norm=1.0,                    # Gradient clipping to prevent explosions
+    max_grad_norm=1.0,
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
-    # Regularization
+    # Memory optimizations
+    optim="paged_adamw_8bit",             # 8-bit optimizer to reduce memory
     weight_decay=0.01,
-    group_by_length=True,                 # Improves efficiency
+    group_by_length=True,
     
-    # Logging & evaluation
+    # Logging & evaluation (adjusted for memory)
     logging_steps=10,
     eval_strategy="steps",
-    eval_steps=100,                       # Evaluate every 100 steps
+    eval_steps=200,                       # Reduced evaluation frequency to save memory
     save_strategy="steps",
-    save_steps=100,
-    save_total_limit=2,
-    load_best_model_at_end=True,
-    metric_for_best_model="eval_loss",
-    greater_is_better=False,
+    save_steps=200,
+    save_total_limit=1,                   # Reduced from 2 to save disk space
+    load_best_model_at_end=False,         # Disabled to save memory during training
     
     # Dataset details
     dataset_text_field="text",
+    max_length=max_seq_length,        # Explicitly set max sequence length
     packing=False,
     report_to="wandb",
 )
-logger.info(f"Training configuration created - Scheduler: {sft_config.lr_scheduler_type}, LR: {sft_config.learning_rate}")
+logger.info(f"Training configuration created - Scheduler: {sft_config.lr_scheduler_type}, LR: {sft_config.learning_rate}, Optimizer: {sft_config.optim}")
 
 # Initialize early stopping callback
 logger.info("Creating early stopping callback")
@@ -708,6 +730,11 @@ logger.info("="*80 + "\n")
 model.config.use_cache = True
 results_pre, summary_pre = test_model_on_dataset(test_data, tokenizer, model, device)
 logger.info("Baseline evaluation completed")
+
+# Clear memory after evaluation
+gc.collect()
+torch.cuda.empty_cache()
+logger.info("Cleared CUDA cache after baseline evaluation")
 
 # Log pre-training metrics to wandb
 wandb.log({
@@ -749,6 +776,11 @@ model.config.use_cache = False
 trainer.train()
 logger.info("Training completed")
 
+# Clear memory after training
+gc.collect()
+torch.cuda.empty_cache()
+logger.info("Cleared CUDA cache after training")
+
 # Evaluate model AFTER training
 logger.info("\n" + "="*80)
 logger.info("POST-TRAINING EVALUATION - Model performance AFTER training")
@@ -756,6 +788,11 @@ logger.info("="*80 + "\n")
 model.config.use_cache = True
 results_post, summary_post = test_model_on_dataset(test_data, tokenizer, model, device)
 logger.info("Post-training evaluation completed")
+
+# Clear memory after evaluation
+gc.collect()
+torch.cuda.empty_cache()
+logger.info("Cleared CUDA cache after post-training evaluation")
 
 # Log post-training metrics to wandb
 wandb.log({
@@ -812,11 +849,17 @@ print(f"  F1 Score: {improvement['f1_delta']:+.4f}")
 print(f"  Set-Exact-Match: {improvement['set_exact_match_delta']:+.4f}")
 print("="*60)
 
-# Create results folder with timestamp, take only day, hour and minute
-day = datetime.now().strftime("%Y%m%d")
-hour = datetime.now().strftime("%H")
-minute = datetime.now().strftime("%M")
-results_folder = f"results/training_results_{day}_{hour}_{minute}"
+# Create results folder with training number, 1 , 2
+# check last number in results folder and increment by 1
+last_number = 0
+try:
+    for folder in os.listdir("results"):
+        if folder.startswith("training_results_"):
+            last_number = int(folder.split("_")[-1])
+    training_number = last_number + 1
+except:
+    training_number = 1
+results_folder = f"results/training_results_{training_number}"
 os.makedirs(results_folder, exist_ok=True)
 logger.info(f"Created results folder: {results_folder}")
 
