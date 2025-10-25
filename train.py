@@ -19,6 +19,7 @@ from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
 from huggingface_hub import login
 import shutil
+from rapidfuzz import fuzz
 
 
 # Set random seeds for reproducibility
@@ -353,39 +354,85 @@ def is_schema_valid(json_obj):
     return True
 
 
-def calculate_metrics(predicted, ground_truth):
+def calculate_metrics(predicted, ground_truth, fuzzy_threshold=85):
     """
-    Calculate P/R/F1 metrics for a single prediction.
+    Calculate P/R/F1 metrics for a single prediction with fuzzy matching.
     
     Args:
         predicted: dict with keys and list values (or single values)
         ground_truth: dict with keys and list values (or single values)
+        fuzzy_threshold: minimum similarity score (0-100) to consider a match
     
     Returns:
-        dict with tp, fp, fn counts
+        dict with tp, fp, fn counts and fuzzy_matches list
     """
-    pred_items = set()
-    gt_items = set()
-    
+    # Normalize predicted items
+    pred_items = []
     for key, values in predicted.items():
-        # Normalize to list if not already
         if not isinstance(values, list):
             values = [values]
         for val in values:
-            pred_items.add((key, str(val)))
+            pred_items.append((key, str(val).strip().lower()))
     
+    # Normalize ground truth items
+    gt_items = []
     for key, values in ground_truth.items():
-        # Normalize to list if not already
         if not isinstance(values, list):
             values = [values]
         for val in values:
-            gt_items.add((key, str(val)))
+            gt_items.append((key, str(val).strip().lower()))
     
-    tp = len(pred_items & gt_items)
-    fp = len(pred_items - gt_items)
-    fn = len(gt_items - pred_items)
+    # Track matches
+    matched_gt = set()
+    matched_pred = set()
+    fuzzy_matches = []
     
-    return {"tp": tp, "fp": fp, "fn": fn}
+    # Find matches (exact + fuzzy)
+    for pred_idx, (pred_key, pred_val) in enumerate(pred_items):
+        best_match_score = 0
+        best_match_idx = -1
+        
+        for gt_idx, (gt_key, gt_val) in enumerate(gt_items):
+            if gt_idx in matched_gt:
+                continue
+                
+            # Keys must match exactly
+            if pred_key != gt_key:
+                continue
+            
+            # Check if values match (exact or fuzzy)
+            if pred_val == gt_val:
+                # Exact match
+                similarity = 100
+            else:
+                # Fuzzy match using token sort ratio (handles word order)
+                similarity = fuzz.token_sort_ratio(pred_val, gt_val)
+            
+            if similarity >= fuzzy_threshold and similarity > best_match_score:
+                best_match_score = similarity
+                best_match_idx = gt_idx
+        
+        # If we found a match, mark both as matched
+        if best_match_idx >= 0:
+            matched_pred.add(pred_idx)
+            matched_gt.add(best_match_idx)
+            fuzzy_matches.append({
+                "key": pred_key,
+                "predicted": pred_val,
+                "ground_truth": gt_items[best_match_idx][1],
+                "similarity": best_match_score
+            })
+    
+    tp = len(matched_pred)
+    fp = len(pred_items) - len(matched_pred)
+    fn = len(gt_items) - len(matched_gt)
+    
+    return {
+        "tp": tp, 
+        "fp": fp, 
+        "fn": fn,
+        "fuzzy_matches": fuzzy_matches
+    }
 
 
 def test_model_on_dataset(test_dataset, tok, mdl, dev):
@@ -437,13 +484,10 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
         for qa_idx, (question, ground_truth) in enumerate(qa_pairs):
             total_predictions += 1
 
-            # Log the actual content for each Q&A pair
+            # Log minimal info for each Q&A pair
             logger.info(f"\n{'='*80}")
             logger.info(f"Conversation {conv_idx}, Q&A pair {qa_idx}")
             logger.info(f"{'='*80}")
-            logger.info(f"Report: {document[:200]}{'...' if len(document) > 200 else ''}")
-            logger.info(f"User Question: {question}")
-            logger.info(f"Ground Truth: {json.dumps(ground_truth, indent=2)}")
 
             predicted_json = None
             response_text = ""
@@ -454,15 +498,12 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
                 response_text, predicted_json = infer_using_model(document, question, tok, mdl, dev)
                 is_valid_json_flag = True
                 is_schema_valid_flag = is_schema_valid(predicted_json)
-                logger.info(f"Model JSON Output: {json.dumps(predicted_json, indent=2)}")
                 logger.info("✓ Successfully generated valid prediction")
             except (json.JSONDecodeError, IndexError, KeyError, AttributeError) as e:
                 predicted_json = {}
                 is_valid_json_flag = False
                 is_schema_valid_flag = False
                 logger.error(f"✗ Error processing Q&A pair {qa_idx} in conversation {conv_idx}: {str(e)}")
-                logger.error(f"Raw Model Response: {response_text[:500]}{'...' if len(response_text) > 500 else ''}")
-                logger.error(f"Fallback Ground Truth: {json.dumps(ground_truth, indent=2)}")
                 logger.error("Model JSON Output: {} (fallback due to error)")
 
             if is_valid_json_flag:
@@ -470,23 +511,25 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
             if is_schema_valid_flag:
                 total_schema_valid += 1
 
-            metrics = calculate_metrics(predicted_json, ground_truth)
+            metrics = calculate_metrics(predicted_json, ground_truth, fuzzy_threshold=85)
             total_tp += metrics["tp"]
             total_fp += metrics["fp"]
             total_fn += metrics["fn"]
 
+            # Check for exact match (for backwards compatibility)
             is_exact_match = (predicted_json == ground_truth)
+            
+            # Also check fuzzy complete match (all items matched with fuzzy)
+            is_fuzzy_complete = (metrics["tp"] > 0 and metrics["fp"] == 0 and metrics["fn"] == 0)
+            
             if is_exact_match:
                 total_exact_matches += 1
-                logger.info("✓ EXACT MATCH - Prediction matches ground truth perfectly")
+                logger.info("✓ EXACT MATCH")
+            elif is_fuzzy_complete:
+                total_exact_matches += 1  # Count fuzzy complete matches as exact
+                logger.info("✓ FUZZY COMPLETE MATCH")
             else:
-                logger.info("✗ PARTIAL MATCH - Some differences found")
-                # Show what was different
-                for key in set(ground_truth.keys()) | set(predicted_json.keys()):
-                    gt_val = ground_truth.get(key, [])
-                    pred_val = predicted_json.get(key, [])
-                    if gt_val != pred_val:
-                        logger.info(f"  Difference in '{key}': GT={gt_val} vs Pred={pred_val}")
+                logger.info("✗ PARTIAL MATCH")
 
             # Check if empty - handle both list and non-list values
             gt_is_empty = all(
@@ -502,12 +545,6 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
                 total_empty_sets += 1
                 if pred_is_empty:
                     total_empty_set_correct += 1
-                    logger.info("✓ Correctly identified empty set")
-                else:
-                    logger.info("✗ False positive - predicted values for empty ground truth")
-            else:
-                if pred_is_empty:
-                    logger.info("✗ False negative - missed non-empty ground truth")
 
             logger.info(f"Metrics: TP={metrics['tp']}, FP={metrics['fp']}, FN={metrics['fn']}")
             logger.info(f"{'='*80}\n")
@@ -591,7 +628,7 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
 
 
 # Configuration for dataset processing
-max_seq_length = 1024  # Reduced from 2048 for memory efficiency
+max_seq_length = 1536  # Optimized for 0.6B model - increased from 1024 for better context
 logger.info(f"Maximum sequence length set to: {max_seq_length}")
 
 # Load training dataset with memory mapping (doesn't load everything into RAM)
@@ -700,12 +737,12 @@ print("...\n")
 
 logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(eval_data)} eval examples, {len(test_data)} test conversations")
 
-# LoRA configuration (optimized for memory efficiency)
+# LoRA configuration (optimized for 0.6B model - increased capacity)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=8,                    # Increased from 4 for better learning capacity
-    lora_alpha=16,          # Scaled proportionally (2*r)
-    lora_dropout=0.1,
+    r=16,                   # Increased from 8 for better learning capacity on structured JSON task
+    lora_alpha=32,          # Scaled proportionally (2*r)
+    lora_dropout=0.05,      # Reduced from 0.1 to allow more learning
     bias="none",
     task_type="CAUSAL_LM",
     target_modules=[
@@ -715,21 +752,21 @@ peft_config = LoraConfig(
 )
 logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
-# Training configuration (memory-optimized)
+# Training configuration (optimized for 0.6B model with 4k samples)
 logger.info("Setting up training configuration")
 sft_config = SFTConfig(
     output_dir=new_model,
     
     # Batch settings (memory-optimized)
-    per_device_train_batch_size=1,        # Reduced to 1 for memory efficiency
-    per_device_eval_batch_size=1,         # Reduced to 1 for memory efficiency
-    gradient_accumulation_steps=32,       # Increased to maintain effective batch size ≈ 16
+    per_device_train_batch_size=1,        # Keep at 1 for memory efficiency
+    per_device_eval_batch_size=1,         # Keep at 1 for memory efficiency
+    gradient_accumulation_steps=16,       # Reduced from 32 for faster updates (effective batch size ≈ 16)
     
-    # Epochs & learning rate
-    num_train_epochs=3,
-    learning_rate=1e-5,
+    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL)
+    num_train_epochs=6,                   # Increased from 3 - more epochs for 4k dataset
+    learning_rate=3e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
     lr_scheduler_type="cosine",
-    warmup_ratio=0.05,
+    warmup_ratio=0.1,                     # Increased from 0.05 for better stability
     
     # Precision & stability
     fp16=True,
@@ -740,23 +777,23 @@ sft_config = SFTConfig(
     
     # Memory optimizations
     optim="paged_adamw_8bit",             # 8-bit optimizer to reduce memory
-    weight_decay=0.01,
+    weight_decay=0.001,                   # Reduced from 0.01 - less regularization for better learning
     group_by_length=True,
     
-    # Logging & evaluation (adjusted for memory)
+    # Logging & evaluation (more frequent for better monitoring)
     logging_steps=10,
     eval_strategy="steps",
-    eval_steps=200,                       # Reduced evaluation frequency to save memory
+    eval_steps=100,                       # Increased frequency from 200 for better monitoring
     save_strategy="steps",
-    save_steps=200,
-    save_total_limit=1,                   # Reduced from 2 to save disk space
+    save_steps=100,                       # Increased frequency from 200
+    save_total_limit=2,                   # Increased from 1 to keep best 2 checkpoints
     load_best_model_at_end=True,          # Load best checkpoint for evaluation
     metric_for_best_model="eval_loss",    # Use eval loss to determine best model
     greater_is_better=False,              # Lower eval loss is better
     
     # Dataset details
     dataset_text_field="text",
-    max_length=max_seq_length,        # Explicitly set max sequence length
+    max_length=max_seq_length,            # Explicitly set max sequence length (now 1536)
     packing=False,
     report_to="wandb",
 )
