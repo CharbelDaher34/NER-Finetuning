@@ -5,6 +5,8 @@ import gc
 import torch
 import wandb
 import logging
+import random
+import numpy as np
 from dotenv import load_dotenv
 from tqdm import tqdm
 from datasets import load_dataset
@@ -12,14 +14,19 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     BitsAndBytesConfig,
-    EarlyStoppingCallback,
 )
 from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
 from huggingface_hub import login
-from datetime import datetime
 import shutil
 
+
+# Set random seeds for reproducibility
+torch.manual_seed(42)
+random.seed(42)
+np.random.seed(42)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(42)
 
 # Configure logging
 logging.basicConfig(
@@ -31,6 +38,7 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+logger.info("Random seeds set to 42 for reproducibility")
 
 
 # Load environment variables
@@ -192,26 +200,67 @@ def format_chat_template(conversation_row):
     return formatted_examples
 
 
+def extract_json_from_text(text):
+    """
+    Extracts the first valid JSON object from text using balanced brace matching.
+    More robust than simple string splitting.
+    
+    Returns:
+        dict or None: Parsed JSON object if found and valid, None otherwise
+    """
+    # Find the first opening brace
+    start = text.find('{')
+    if start == -1:
+        return None
+    
+    # Track brace depth to find the matching closing brace
+    depth = 0
+    for i in range(start, len(text)):
+        if text[i] == '{':
+            depth += 1
+        elif text[i] == '}':
+            depth -= 1
+            if depth == 0:
+                candidate = text[start:i+1]
+                try:
+                    return json.loads(candidate)
+                except json.JSONDecodeError:
+                    # If first balanced pair fails, continue searching
+                    pass
+                break
+    
+    # No valid JSON found
+    return None
+
+
 def infer_using_model(report_text, question, tok, mdl, dev):
     """
     Uses a pre-trained model to process a crime report and infer answers to specific questions.
-    Optimized for faster inference.
+    Optimized for faster inference with robust JSON extraction.
     """
+    # Stricter system prompt that enforces JSON-only output
     test_messages = [
-        {"role": "system", "content": "A virtual assistant answers questions from a user based on the provided text, answer with a json object, key being the entity asked for by user and the value extracted from the text."},
+        {"role": "system", "content": (
+            "You answer ONLY with a JSON object. No prose, no backticks, nothing outside braces. "
+            "Keys must match the question entity exactly. Values must be arrays of strings (or empty array)."
+        )},
         {"role": "user", "content": f"Text:\n{report_text}"},
         {"role": "assistant", "content": "I've read this text."},
         {"role": "user", "content": question}
     ]
 
     prompt = tok.apply_chat_template(test_messages, tokenize=False, add_generation_prompt=True)
+    
+    # Seed an opening brace to bias the model toward valid JSON
+    prompt = prompt + "\n{"
+    
     inputs = tok(prompt, return_tensors="pt", padding=True).to(dev)
-
     input_token_length = inputs["input_ids"].shape[1]
+    
     with torch.no_grad():
         outputs = mdl.generate(
             **inputs, 
-            max_new_tokens=150,  # Reduced from 500 - JSON responses are typically short
+            max_new_tokens=200,  # Increased slightly to accommodate JSON structure
             min_new_tokens=1,
             do_sample=False,  # Greedy decoding (fastest)
             num_beams=1,  # No beam search (faster)
@@ -221,15 +270,30 @@ def infer_using_model(report_text, question, tok, mdl, dev):
         )
 
     new_tokens = outputs[0, input_token_length:]
-    response_text = tok.decode(new_tokens, skip_special_tokens=True)
+    generated_text = tok.decode(new_tokens, skip_special_tokens=True).strip()
+    
+    # Reconstruct full response with the seeded brace
+    response_text = "{" + generated_text
 
-    json_text = json.loads(f"{{{response_text.split('{')[1].split('}')[0].strip()}}}")
-
-    for key, value in json_text.items():
-        if isinstance(value, str) and ',' in value:
-            json_text[key] = [item.strip() for item in value.split(',')]
-        elif isinstance(value, str):
-            json_text[key] = [value]
+    # Use robust JSON extraction
+    json_obj = extract_json_from_text(response_text)
+    
+    # Graceful fallback if extraction fails
+    if json_obj is None:
+        json_obj = {}
+    
+    # Normalize values to lists
+    json_text = {}
+    for key, value in json_obj.items():
+        if isinstance(value, str):
+            if ',' in value:
+                json_text[key] = [item.strip() for item in value.split(',')]
+            else:
+                json_text[key] = [value] if value else []
+        elif isinstance(value, list):
+            json_text[key] = value
+        else:
+            json_text[key] = [str(value)] if value else []
 
     return response_text, json_text
 
@@ -639,12 +703,15 @@ logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {
 # LoRA configuration (optimized for memory efficiency)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=4,                    # Reduced from 8 for memory efficiency
-    lora_alpha=8,           # Scaled proportionally
+    r=8,                    # Increased from 4 for better learning capacity
+    lora_alpha=16,          # Scaled proportionally (2*r)
     lora_dropout=0.1,
     bias="none",
     task_type="CAUSAL_LM",
-    target_modules=['q_proj', 'v_proj']  # Reduced to only essential modules for memory efficiency
+    target_modules=[
+        "q_proj", "k_proj", "v_proj", "o_proj",  # All attention projections
+        "gate_proj", "up_proj", "down_proj"       # MLP layers
+    ]
 )
 logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
@@ -656,18 +723,18 @@ sft_config = SFTConfig(
     # Batch settings (memory-optimized)
     per_device_train_batch_size=1,        # Reduced to 1 for memory efficiency
     per_device_eval_batch_size=1,         # Reduced to 1 for memory efficiency
-    gradient_accumulation_steps=16,       # Increased to maintain effective batch size ≈ 16
+    gradient_accumulation_steps=32,       # Increased to maintain effective batch size ≈ 16
     
     # Epochs & learning rate
     num_train_epochs=3,
-    learning_rate=3e-5,
+    learning_rate=1e-5,
     lr_scheduler_type="cosine",
     warmup_ratio=0.05,
     
     # Precision & stability
     fp16=True,
     bf16=False,
-    max_grad_norm=1.0,
+    max_grad_norm=0.5,
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
@@ -683,7 +750,9 @@ sft_config = SFTConfig(
     save_strategy="steps",
     save_steps=200,
     save_total_limit=1,                   # Reduced from 2 to save disk space
-    load_best_model_at_end=False,         # Disabled to save memory during training
+    load_best_model_at_end=True,          # Load best checkpoint for evaluation
+    metric_for_best_model="eval_loss",    # Use eval loss to determine best model
+    greater_is_better=False,              # Lower eval loss is better
     
     # Dataset details
     dataset_text_field="text",
@@ -693,14 +762,7 @@ sft_config = SFTConfig(
 )
 logger.info(f"Training configuration created - Scheduler: {sft_config.lr_scheduler_type}, LR: {sft_config.learning_rate}, Optimizer: {sft_config.optim}")
 
-# Initialize early stopping callback
-logger.info("Creating early stopping callback")
-early_stop_callback = EarlyStoppingCallback(
-    early_stopping_patience=3,
-    early_stopping_threshold=0.01
-)
-
-# Initialize trainer
+# Initialize trainer (without early stopping to reduce memory overhead)
 logger.info("Initializing SFTTrainer")
 trainer = SFTTrainer(
     model=model,
@@ -709,9 +771,13 @@ trainer = SFTTrainer(
     eval_dataset=eval_data,
     peft_config=peft_config,
     args=sft_config,
-    callbacks=[early_stop_callback],
 )
 logger.info("Trainer initialized successfully")
+
+# ✅ Reassign model to the LoRA-wrapped model from trainer
+# This ensures both pre- and post-training evals use the correct model reference
+model = trainer.model
+logger.info("Model reference updated to use LoRA-wrapped model from trainer")
 
 # Optional: Check for NaN parameters before training (safety check)
 nan_params = []
@@ -849,15 +915,15 @@ print(f"  F1 Score: {improvement['f1_delta']:+.4f}")
 print(f"  Set-Exact-Match: {improvement['set_exact_match_delta']:+.4f}")
 print("="*60)
 
-# Create results folder with training number, 1 , 2
-# check last number in results folder and increment by 1
+# Create results folder with training number, 1, 2, 3, etc.
+# Check last number in results folder and increment by 1
 last_number = 0
 try:
     for folder in os.listdir("results"):
         if folder.startswith("training_results_"):
-            last_number = int(folder.split("_")[-1])
+            last_number = max(last_number, int(folder.split("_")[-1]))
     training_number = last_number + 1
-except:
+except (FileNotFoundError, ValueError, IndexError):
     training_number = 1
 results_folder = f"results/training_results_{training_number}"
 os.makedirs(results_folder, exist_ok=True)
@@ -941,7 +1007,7 @@ summary_report = f"""
 TRAINING SUMMARY REPORT
 {'='*80}
 
-Training Completed: {day}_{hour}_{minute}
+Training Run: #{training_number}
 Results Folder: {results_folder}
 
 MODEL CONFIGURATION
