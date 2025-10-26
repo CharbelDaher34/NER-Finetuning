@@ -13,7 +13,6 @@ from datasets import load_dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    BitsAndBytesConfig,
 )
 from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
@@ -59,26 +58,17 @@ run = wandb.init(
 # Model configuration
 base_model = "Qwen/Qwen3-0.6B"
 new_model = "Qwen/Qwen3-0.6B-finetuned"
-torch_dtype = torch.float16  # Use FP16 (BF16 not supported on this GPU with 4-bit quantization)
+torch_dtype = torch.bfloat16  # Use BF16 for training
 # Use SDPA (Scaled Dot Product Attention) for faster inference, fallback to eager
 attn_implementation = "sdpa"  # Faster than eager, fallback to "eager" if needed
 device_id = torch.cuda.current_device() if torch.cuda.is_available() else 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# QLoRA configuration for efficient 4-bit training
-bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch_dtype,
-    bnb_4bit_use_double_quant=True,
-)
-
-# Load model with optimizations
+# Load model with LoRA (no quantization)
 logger.info(f"Attempting to load model with attention implementation: {attn_implementation}")
 try:
     model = AutoModelForCausalLM.from_pretrained(
         base_model,
-        quantization_config=bnb_config,
         device_map={"": device_id},
         attn_implementation=attn_implementation,
         torch_dtype=torch_dtype,
@@ -89,7 +79,6 @@ except Exception as e:
     logger.info("Falling back to 'eager' (default attention)")
     model = AutoModelForCausalLM.from_pretrained(
         base_model,
-        quantization_config=bnb_config,
         device_map={"": device_id},
         attn_implementation="eager",
         torch_dtype=torch_dtype,
@@ -764,19 +753,19 @@ sft_config = SFTConfig(
     
     # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL)
     num_train_epochs=6,                   # Increased from 3 - more epochs for 4k dataset
-    learning_rate=3e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
+    learning_rate=2.4e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
     lr_scheduler_type="cosine",
     warmup_ratio=0.1,                     # Increased from 0.05 for better stability
     
     # Precision & stability
-    fp16=True,
-    bf16=False,
-    max_grad_norm=0.5,
+    fp16=False,
+    bf16=True,
+    max_grad_norm=1,
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
     # Memory optimizations
-    optim="paged_adamw_8bit",             # 8-bit optimizer to reduce memory
+    optim="adamw_torch",                  # Standard AdamW optimizer for full precision training
     weight_decay=0.001,                   # Reduced from 0.01 - less regularization for better learning
     group_by_length=True,
     
@@ -1015,7 +1004,7 @@ training_config = {
         "gradient_accumulation_steps": sft_config.gradient_accumulation_steps,
         "learning_rate": sft_config.learning_rate,
         "warmup_steps": sft_config.warmup_steps,
-        "fp16": sft_config.fp16,
+        "bf16": sft_config.bf16,
     },
     "dataset_info": {
         "train_samples": len(train_data),
