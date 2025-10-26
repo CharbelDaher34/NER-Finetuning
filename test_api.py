@@ -196,8 +196,8 @@ if __name__ == "__main__":
     
     try:
         # Test endpoints
-        # test_health()
-        # test_single_turn()
+        test_health()
+        test_single_turn()
         test_multi_turn()
         test_batch_questions()
         

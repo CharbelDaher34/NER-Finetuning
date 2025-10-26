@@ -66,7 +66,7 @@ async def lifespan(app: FastAPI):
     # Load GGUF model
     print("Loading GGUF model...")
     model = Llama(
-        model_path="results/training_results_20251024_071121/model.gguf",
+        model_path="./best_model/model.gguf",
         n_ctx=40960,  # Full context capacity
         n_threads=8,
         n_gpu_layers=-1,  # Use all GPU layers
