@@ -2,8 +2,8 @@
 TRAINING SUMMARY REPORT
 ================================================================================
 
-Training Run: #7
-Results Folder: results/training_results_7
+Training Run: #9
+Results Folder: results/training_results_9
 
 MODEL CONFIGURATION
 ================================================================================
@@ -18,33 +18,47 @@ Test Samples: 50
 
 PRE-TRAINING METRICS
 ================================================================================
-Precision:        0.4063
+Precision:        0.4650
 Recall:           0.7278
-F1 Score:         0.5215
-Set-Exact-Match:  0.4929
+F1 Score:         0.5675
+Set-Exact-Match:  0.4953
 Valid JSON %:     1.0000
+
+Fuzzy Match Stats (Pre):
+  Total Matches:  492
+  Exact (100%):   479
+  Fuzzy (<100%):  13
+  Avg Similarity: 99.87%
 
 POST-TRAINING METRICS
 ================================================================================
-Precision:        0.5194
-Recall:           0.8728
-F1 Score:         0.6512
-Set-Exact-Match:  0.6235
+Precision:        0.7388
+Recall:           0.8284
+F1 Score:         0.7810
+Set-Exact-Match:  0.7694
 Valid JSON %:     1.0000
+
+Fuzzy Match Stats (Post):
+  Total Matches:  560
+  Exact (100%):   557
+  Fuzzy (<100%):  3
+  Avg Similarity: 99.97%
 
 IMPROVEMENT (Post - Pre)
 ================================================================================
-Precision:        +0.1131
-Recall:           +0.1450
-F1 Score:         +0.1298
-Set-Exact-Match:  +0.1306
+Precision:        +0.2738
+Recall:           +0.1006
+F1 Score:         +0.2136
+Set-Exact-Match:  +0.2741
 
 FILES SAVED
 ================================================================================
-- metrics_pre_training.json          : Pre-training evaluation summary
+- metrics_pre_training.json          : Pre-training evaluation summary (includes fuzzy stats)
 - detailed_results_pre_training.json : Detailed per-question pre-training results
-- metrics_post_training.json         : Post-training evaluation summary
+- fuzzy_matches_pre_training.json    : All fuzzy matches with similarity scores (pre)
+- metrics_post_training.json         : Post-training evaluation summary (includes fuzzy stats)
 - detailed_results_post_training.json: Detailed per-question post-training results
+- fuzzy_matches_post_training.json   : All fuzzy matches with similarity scores (post)
 - metrics_improvement.json           : Improvement deltas
 - training_history.json              : Training loss history and steps
 - training_config.json               : Full training configuration

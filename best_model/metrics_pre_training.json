@@ -1,18 +1,26 @@
 {
   "total_predictions": 850,
-  "precision": 0.40627580511973577,
+  "precision": 0.46502835538752363,
   "recall": 0.727810650887574,
-  "f1": 0.5214626391096979,
-  "set_exact_match": 0.4929411764705882,
-  "empty_set_accuracy": 0.02100840336134454,
+  "f1": 0.5674740484429066,
+  "set_exact_match": 0.49529411764705883,
+  "empty_set_accuracy": 0.025210084033613446,
   "valid_json_pct": 1.0,
   "schema_valid_pct": 1.0,
   "total_tp": 492,
-  "total_fp": 719,
+  "total_fp": 566,
   "total_fn": 184,
-  "total_exact_matches": 419,
+  "total_exact_matches": 421,
   "total_empty_sets": 238,
-  "total_empty_set_correct": 5,
+  "total_empty_set_correct": 6,
   "conversations_processed": 50,
-  "conversations_skipped": 0
+  "conversations_skipped": 0,
+  "fuzzy_match_stats": {
+    "total_fuzzy_matches": 492,
+    "avg_similarity_score": 99.8722242211757,
+    "min_similarity_score": 90.9090909090909,
+    "max_similarity_score": 100,
+    "total_exact_tp": 479,
+    "total_fuzzy_tp": 13
+  }
 }

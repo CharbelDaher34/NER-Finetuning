@@ -1,27 +1,48 @@
 {
   "base_model": "Qwen/Qwen3-0.6B",
   "output_model": "Qwen/Qwen3-0.6B-finetuned",
+  "random_seed": 42,
+  "dataset_path": "./dataset.jsonl",
+  "test_dataset_path": "./test_dataset.jsonl",
+  "max_seq_length": 1536,
+  "train_test_split": 0.1,
+  "fuzzy_match_threshold": 85,
   "lora_config": {
     "r": 16,
     "lora_alpha": 32,
-    "lora_dropout": 0.05,
+    "lora_dropout": 0.1,
     "target_modules": [
-      "down_proj",
-      "o_proj",
-      "v_proj",
-      "gate_proj",
       "q_proj",
       "k_proj",
-      "up_proj"
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
     ]
   },
   "training_args": {
-    "num_train_epochs": 6,
-    "per_device_train_batch_size": 1,
-    "gradient_accumulation_steps": 16,
-    "learning_rate": 2.4e-05,
-    "warmup_steps": 0,
+    "num_train_epochs": 4,
+    "per_device_train_batch_size": 2,
+    "per_device_eval_batch_size": 2,
+    "gradient_accumulation_steps": 8,
+    "learning_rate": 5e-05,
+    "warmup_ratio": 0.03,
+    "lr_scheduler_type": "cosine",
+    "weight_decay": 0.01,
+    "max_grad_norm": 0.3,
+    "optimizer": "adamw_8bit",
     "bf16": true
+  },
+  "early_stopping": {
+    "patience": 3,
+    "threshold": 0.001
+  },
+  "generation_config": {
+    "max_new_tokens": 256,
+    "temperature": 0.1,
+    "top_p": 0.95,
+    "repetition_penalty": 1.1
   },
   "dataset_info": {
     "train_samples": 4050,
