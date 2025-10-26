@@ -1,39 +1,3 @@
-"""
-Fine-tuning script for Named Entity Recognition (NER) task using Qwen3-0.6B model.
-
-OPTIMIZATIONS FOR 2K DATASET (v2):
-=================================
-1. LoRA Configuration:
-   - r=12 (reduced from 16) - prevents overfitting on small dataset
-   - lora_alpha=24 (proportional to r)
-   - lora_dropout=0.1 (increased for regularization)
-
-2. Training Hyperparameters:
-   - learning_rate=1.5e-5 (reduced from 2.4e-5) - more conservative
-   - num_epochs=4 (reduced from 6) - prevents overfitting
-   - gradient_accumulation_steps=24 (increased for stability)
-   - weight_decay=0.01 (increased for regularization)
-   - max_grad_norm=0.5 (tighter clipping)
-   - warmup_ratio=0.05 (appropriate for small dataset)
-
-3. Evaluation & Checkpointing:
-   - eval_steps=50 (more frequent monitoring)
-   - save_steps=50 (more frequent checkpoints)
-   - save_total_limit=3 (keep top 3 models)
-   - Early stopping: patience=5, threshold=0.001
-
-4. Inference Improvements:
-   - Temperature sampling (0.1) for better quality
-   - Nucleus sampling (top_p=0.95)
-   - Repetition penalty (1.1)
-   - Increased max_new_tokens=256
-
-5. Fuzzy Matching Evaluation:
-   - Comprehensive fuzzy match tracking with similarity scores
-   - Separate JSON files for detailed match analysis
-   - Aggregated statistics in metrics files
-"""
-
 import os
 import re
 import json
@@ -797,9 +761,9 @@ logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {
 # LoRA configuration (optimized for 0.6B model with 2k dataset)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=12,                   # Reduced from 16 for smaller dataset (2k) - prevents overfitting
-    lora_alpha=24,          # Scaled proportionally (2*r)
-    lora_dropout=0.1,       # Increased from 0.05 for better regularization on small dataset
+    r=16,                   # Increased from 8 for better learning capacity on structured JSON task
+    lora_alpha=32,          # Scaled proportionally (2*r)
+    lora_dropout=0.05,      # Reduced from 0.1 to allow more learning
     bias="none",
     task_type="CAUSAL_LM",
     target_modules=[
@@ -817,33 +781,33 @@ sft_config = SFTConfig(
     # Batch settings (memory-optimized)
     per_device_train_batch_size=1,        # Keep at 1 for memory efficiency
     per_device_eval_batch_size=1,         # Keep at 1 for memory efficiency
-    gradient_accumulation_steps=24,       # Increased from 16 for more stable gradients (effective batch size ≈ 24)
+    gradient_accumulation_steps=16,       # Reduced from 32 for faster updates (effective batch size ≈ 16)
     
-    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL WITH 2K DATASET)
-    num_train_epochs=4,                   # Reduced from 6 - prevents overfitting on small dataset
-    learning_rate=1.5e-5,                 # Reduced from 2.4e-5 - more conservative for 2k samples
+    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL)
+    num_train_epochs=6,                   # Increased from 3 - more epochs for 4k dataset
+    learning_rate=2.4e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
     lr_scheduler_type="cosine",
-    warmup_ratio=0.05,                    # Reduced from 0.1 - smaller dataset needs less warmup
+    warmup_ratio=0.1,                     # Increased from 0.05 for better stability
     
     # Precision & stability
     fp16=False,
     bf16=True,
-    max_grad_norm=0.5,                    # Reduced from 1.0 - tighter gradient clipping for stability
+    max_grad_norm=1,
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
     # Memory optimizations
-    optim="adamw_torch",                  # Standard AdamW optimizer
-    weight_decay=0.01,                    # Increased from 0.001 - more regularization prevents overfitting
+    optim="adamw_torch",                  # Standard AdamW optimizer for full precision training
+    weight_decay=0.001,                   # Reduced from 0.01 - less regularization for better learning
     group_by_length=True,
     
     # Logging & evaluation (more frequent for better monitoring)
     logging_steps=10,
     eval_strategy="steps",
-    eval_steps=50,                        # More frequent evaluation for small dataset
+    eval_steps=100,                       # Increased frequency from 200 for better monitoring
     save_strategy="steps",
-    save_steps=50,                        # More frequent checkpoints
-    save_total_limit=3,                   # Keep top 3 checkpoints for small dataset
+    save_steps=100,                       # Increased frequency from 200
+    save_total_limit=2,                   # Increased from 1 to keep best 2 checkpoints
     load_best_model_at_end=True,          # Load best checkpoint for evaluation
     metric_for_best_model="eval_loss",    # Use eval loss to determine best model
     greater_is_better=False,              # Lower eval loss is better
