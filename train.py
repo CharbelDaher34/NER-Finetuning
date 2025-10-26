@@ -22,12 +22,79 @@ import shutil
 from rapidfuzz import fuzz
 
 
+# ============================================================================
+# CONFIGURATION SECTION - All Parameters
+# ============================================================================
+
+# Random Seed
+RANDOM_SEED = 42
+
+# Model Configuration
+BASE_MODEL = "Qwen/Qwen3-0.6B"
+NEW_MODEL = "Qwen/Qwen3-0.6B-finetuned"
+TORCH_DTYPE = torch.bfloat16
+ATTN_IMPLEMENTATION = "sdpa"  # Options: "sdpa", "eager"
+
+# Dataset Configuration
+DATASET_PATH = './dataset.jsonl'
+TEST_DATASET_PATH = './test_dataset.jsonl'
+MAX_SEQ_LENGTH = 1536
+TRAIN_TEST_SPLIT = 0.1  # 10% for eval, 90% for training
+
+# LoRA Configuration (Optimized for 0.6B model with 4k examples)
+LORA_R = 16                 # Rank: 16 provides good capacity for structured JSON task
+LORA_ALPHA = 32             # Scaling: 2*r is standard (controls adaptation strength)
+LORA_DROPOUT = 0.1          # Dropout: 0.1 for better generalization with 4k examples
+LORA_TARGET_MODULES = [
+    "q_proj", "k_proj", "v_proj", "o_proj",  # All attention projections
+    "gate_proj", "up_proj", "down_proj"       # MLP layers (important for 0.6B model)
+]
+
+# Training Configuration (Optimized for 0.6B + BF16 + 4k examples)
+NUM_TRAIN_EPOCHS = 4        # 4 epochs optimal for 4k examples (with early stopping)
+LEARNING_RATE = 5e-5        # Higher LR for LoRA: 5e-5 good for 0.6B model
+WARMUP_RATIO = 0.03         # 3% warmup (~50 steps) sufficient for 4k examples
+LR_SCHEDULER_TYPE = "cosine"  # Cosine decay for smooth convergence
+PER_DEVICE_TRAIN_BATCH_SIZE = 2   # Set to 2 for faster training (reduce to 1 if OOM)
+PER_DEVICE_EVAL_BATCH_SIZE = 2    # Match training batch size
+GRADIENT_ACCUMULATION_STEPS = 8   # Effective batch size = 16 (2*8=16, or 1*16=16 if OOM)
+WEIGHT_DECAY = 0.01         # Standard weight decay for regularization
+MAX_GRAD_NORM = 0.3         # Lower gradient clipping for stability in BF16
+OPTIMIZER = "adamw_8bit"    # 8-bit AdamW saves ~50% memory vs standard AdamW
+
+# Training Monitoring (Optimized for ~1000 total steps with 4k examples)
+LOGGING_STEPS = 25          # Log every 25 steps (~40 logs total)
+EVAL_STEPS = 125            # Evaluate every 125 steps (8 times per training)
+SAVE_STEPS = 125            # Save every 125 steps (8 checkpoints total)
+SAVE_TOTAL_LIMIT = 2        # Keep only best 2 checkpoints to save disk space
+
+# Early Stopping (Adjusted for fewer evaluations)
+EARLY_STOPPING_PATIENCE = 3       # Stop after 3 evals without improvement (~375 steps)
+EARLY_STOPPING_THRESHOLD = 0.001  # Minimum improvement threshold
+
+# Evaluation Configuration
+FUZZY_MATCH_THRESHOLD = 85  # Minimum similarity score (0-100) for fuzzy matching
+
+# Generation Configuration
+GENERATION_MAX_NEW_TOKENS = 256
+GENERATION_TEMPERATURE = 0.1
+GENERATION_TOP_P = 0.95
+GENERATION_REPETITION_PENALTY = 1.1
+
+# W&B Project Name
+WANDB_PROJECT_NAME = 'Fine-Tune Llama 3 8B on Crime Dataset'
+
+# ============================================================================
+# END OF CONFIGURATION
+# ============================================================================
+
+
 # Set random seeds for reproducibility
-torch.manual_seed(42)
-random.seed(42)
-np.random.seed(42)
+torch.manual_seed(RANDOM_SEED)
+random.seed(RANDOM_SEED)
+np.random.seed(RANDOM_SEED)
 if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(42)
+    torch.cuda.manual_seed_all(RANDOM_SEED)
 
 # Configure logging
 logging.basicConfig(
@@ -39,7 +106,7 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-logger.info("Random seeds set to 42 for reproducibility")
+logger.info(f"Random seeds set to {RANDOM_SEED} for reproducibility")
 
 
 # Load environment variables
@@ -51,43 +118,38 @@ wandb_api_key = os.getenv("WANDB_API_KEY")
 login(token=hf_token)
 wandb.login(key=wandb_api_key)
 run = wandb.init(
-    project='Fine-Tune Llama 3 8B on Crime Dataset', 
+    project=WANDB_PROJECT_NAME, 
     job_type="training", 
     anonymous="allow"
 )
 
-# Model configuration
-base_model = "Qwen/Qwen3-0.6B"
-new_model = "Qwen/Qwen3-0.6B-finetuned"
-torch_dtype = torch.bfloat16  # Use BF16 for training
-# Use SDPA (Scaled Dot Product Attention) for faster inference, fallback to eager
-attn_implementation = "sdpa"  # Faster than eager, fallback to "eager" if needed
+# Setup device
 device_id = torch.cuda.current_device() if torch.cuda.is_available() else 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model with LoRA (no quantization)
-logger.info(f"Attempting to load model with attention implementation: {attn_implementation}")
+logger.info(f"Attempting to load model with attention implementation: {ATTN_IMPLEMENTATION}")
 try:
     model = AutoModelForCausalLM.from_pretrained(
-        base_model,
+        BASE_MODEL,
         device_map={"": device_id},
-        attn_implementation=attn_implementation,
-        torch_dtype=torch_dtype,
+        attn_implementation=ATTN_IMPLEMENTATION,
+        torch_dtype=TORCH_DTYPE,
     )
-    logger.info(f"✓ Successfully loaded model with {attn_implementation}")
+    logger.info(f"✓ Successfully loaded model with {ATTN_IMPLEMENTATION}")
 except Exception as e:
-    logger.warning(f"Failed to load with {attn_implementation}: {str(e)}")
+    logger.warning(f"Failed to load with {ATTN_IMPLEMENTATION}: {str(e)}")
     logger.info("Falling back to 'eager' (default attention)")
     model = AutoModelForCausalLM.from_pretrained(
-        base_model,
+        BASE_MODEL,
         device_map={"": device_id},
         attn_implementation="eager",
-        torch_dtype=torch_dtype,
+        torch_dtype=TORCH_DTYPE,
     )
     logger.info("✓ Successfully loaded model with eager")
 
 # Load tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_model)
+tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 # Sync model config with tokenizer to avoid mismatched PAD warnings
@@ -252,16 +314,16 @@ def infer_using_model(report_text, question, tok, mdl, dev):
     with torch.no_grad():
         outputs = mdl.generate(
             **inputs, 
-            max_new_tokens=256,           # Increased from 200 for more complex outputs
+            max_new_tokens=GENERATION_MAX_NEW_TOKENS,
             min_new_tokens=1,
-            do_sample=True,               # Enable sampling for better quality
-            temperature=0.1,              # Low temperature for focused, deterministic outputs
-            top_p=0.95,                   # Nucleus sampling
-            repetition_penalty=1.1,       # Slight penalty to avoid repetition
-            num_beams=1,                  # Keep at 1 for speed
+            do_sample=True,
+            temperature=GENERATION_TEMPERATURE,
+            top_p=GENERATION_TOP_P,
+            repetition_penalty=GENERATION_REPETITION_PENALTY,
+            num_beams=1,
             pad_token_id=tok.pad_token_id,
             eos_token_id=tok.eos_token_id,
-            use_cache=True,               # Enable KV cache for faster generation
+            use_cache=True,
         )
 
     new_tokens = outputs[0, input_token_length:]
@@ -348,7 +410,7 @@ def is_schema_valid(json_obj):
     return True
 
 
-def calculate_metrics(predicted, ground_truth, fuzzy_threshold=85):
+def calculate_metrics(predicted, ground_truth, fuzzy_threshold=FUZZY_MATCH_THRESHOLD):
     """
     Calculate P/R/F1 metrics for a single prediction with fuzzy matching.
     
@@ -505,7 +567,7 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
             if is_schema_valid_flag:
                 total_schema_valid += 1
 
-            metrics = calculate_metrics(predicted_json, ground_truth, fuzzy_threshold=85)
+            metrics = calculate_metrics(predicted_json, ground_truth, fuzzy_threshold=FUZZY_MATCH_THRESHOLD)
             total_tp += metrics["tp"]
             total_fp += metrics["fp"]
             total_fn += metrics["fn"]
@@ -648,25 +710,21 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
     return all_results, eval_summary
 
 
-# Configuration for dataset processing
-max_seq_length = 1536  # Optimized for 0.6B model - increased from 1024 for better context
-logger.info(f"Maximum sequence length set to: {max_seq_length}")
-
 # Load training dataset with memory mapping (doesn't load everything into RAM)
-logger.info("Loading training dataset from './dataset.jsonl'")
-dataset = load_dataset('json', data_files='./dataset.jsonl', keep_in_memory=False)
+logger.info(f"Loading training dataset from '{DATASET_PATH}'")
+dataset = load_dataset('json', data_files=DATASET_PATH, keep_in_memory=False)
 logger.info(f"Training dataset loaded with {len(dataset['train'])} samples (multi-turn conversations)")
 
-# Split dataset: 90% train / 10% eval (for training validation)
-logger.info("Splitting training dataset: 90% train / 10% eval")
-conversation_split = dataset['train'].train_test_split(test_size=0.1, seed=42)
+# Split dataset
+logger.info(f"Splitting training dataset: {int((1-TRAIN_TEST_SPLIT)*100)}% train / {int(TRAIN_TEST_SPLIT*100)}% eval")
+conversation_split = dataset['train'].train_test_split(test_size=TRAIN_TEST_SPLIT, seed=RANDOM_SEED)
 train_conversations = conversation_split["train"]  # 90% for training
 eval_conversations = conversation_split["test"]    # 10% for evaluation during training
 logger.info(f"Split complete: {len(train_conversations)} conversations for training, {len(eval_conversations)} for evaluation")
 
 # Load separate test dataset for final evaluation
-logger.info("Loading test dataset from './test_dataset.jsonl'")
-test_dataset = load_dataset('json', data_files='./test_dataset.jsonl', keep_in_memory=False)
+logger.info(f"Loading test dataset from '{TEST_DATASET_PATH}'")
+test_dataset = load_dataset('json', data_files=TEST_DATASET_PATH, keep_in_memory=False)
 test_conversations = test_dataset['train']  # The 'train' split contains all test data
 logger.info(f"Test dataset loaded with {len(test_conversations)} conversations for final evaluation")
 
@@ -758,63 +816,60 @@ print("...\n")
 
 logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(eval_data)} eval examples, {len(test_data)} test conversations")
 
-# LoRA configuration (optimized for 0.6B model with 2k dataset)
+# LoRA configuration
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=16,                   # Increased from 8 for better learning capacity on structured JSON task
-    lora_alpha=32,          # Scaled proportionally (2*r)
-    lora_dropout=0.05,      # Reduced from 0.1 to allow more learning
+    r=LORA_R,
+    lora_alpha=LORA_ALPHA,
+    lora_dropout=LORA_DROPOUT,
     bias="none",
     task_type="CAUSAL_LM",
-    target_modules=[
-        "q_proj", "k_proj", "v_proj", "o_proj",  # All attention projections
-        "gate_proj", "up_proj", "down_proj"       # MLP layers
-    ]
+    target_modules=LORA_TARGET_MODULES
 )
 logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
-# Training configuration (optimized for 0.6B model with 2k dataset)
+# Training configuration
 logger.info("Setting up training configuration")
 sft_config = SFTConfig(
-    output_dir=new_model,
+    output_dir=NEW_MODEL,
     
-    # Batch settings (memory-optimized)
-    per_device_train_batch_size=1,        # Keep at 1 for memory efficiency
-    per_device_eval_batch_size=1,         # Keep at 1 for memory efficiency
-    gradient_accumulation_steps=16,       # Reduced from 32 for faster updates (effective batch size ≈ 16)
+    # Batch settings
+    per_device_train_batch_size=PER_DEVICE_TRAIN_BATCH_SIZE,
+    per_device_eval_batch_size=PER_DEVICE_EVAL_BATCH_SIZE,
+    gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
     
-    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL)
-    num_train_epochs=6,                   # Increased from 3 - more epochs for 4k dataset
-    learning_rate=2.4e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
-    lr_scheduler_type="cosine",
-    warmup_ratio=0.1,                     # Increased from 0.05 for better stability
+    # Epochs & learning rate
+    num_train_epochs=NUM_TRAIN_EPOCHS,
+    learning_rate=LEARNING_RATE,
+    lr_scheduler_type=LR_SCHEDULER_TYPE,
+    warmup_ratio=WARMUP_RATIO,
     
     # Precision & stability
     fp16=False,
     bf16=True,
-    max_grad_norm=1,
+    max_grad_norm=MAX_GRAD_NORM,
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
     # Memory optimizations
-    optim="adamw_torch",                  # Standard AdamW optimizer for full precision training
-    weight_decay=0.001,                   # Reduced from 0.01 - less regularization for better learning
+    optim=OPTIMIZER,
+    weight_decay=WEIGHT_DECAY,
     group_by_length=True,
     
-    # Logging & evaluation (more frequent for better monitoring)
-    logging_steps=10,
+    # Logging & evaluation
+    logging_steps=LOGGING_STEPS,
     eval_strategy="steps",
-    eval_steps=100,                       # Increased frequency from 200 for better monitoring
+    eval_steps=EVAL_STEPS,
     save_strategy="steps",
-    save_steps=100,                       # Increased frequency from 200
-    save_total_limit=2,                   # Increased from 1 to keep best 2 checkpoints
-    load_best_model_at_end=True,          # Load best checkpoint for evaluation
-    metric_for_best_model="eval_loss",    # Use eval loss to determine best model
-    greater_is_better=False,              # Lower eval loss is better
+    save_steps=SAVE_STEPS,
+    save_total_limit=SAVE_TOTAL_LIMIT,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
     
     # Dataset details
     dataset_text_field="text",
-    max_length=max_seq_length,            # Explicitly set max sequence length (1536)
+    max_length=MAX_SEQ_LENGTH,
     packing=False,
     report_to="wandb",
 )
@@ -823,8 +878,8 @@ logger.info(f"Training configuration created - Scheduler: {sft_config.lr_schedul
 # Initialize trainer with early stopping callback
 logger.info("Initializing SFTTrainer with early stopping")
 early_stopping_callback = EarlyStoppingCallback(
-    early_stopping_patience=5,      # Stop after 5 evaluations without improvement
-    early_stopping_threshold=0.001  # Minimum change to qualify as improvement
+    early_stopping_patience=EARLY_STOPPING_PATIENCE,
+    early_stopping_threshold=EARLY_STOPPING_THRESHOLD
 )
 
 trainer = SFTTrainer(
@@ -1074,21 +1129,42 @@ with open(os.path.join(results_folder, "training_history.json"), 'w') as f:
 # Save training configuration
 logger.info("Saving training configuration...")
 training_config = {
-    "base_model": base_model,
-    "output_model": new_model,
+    "base_model": BASE_MODEL,
+    "output_model": NEW_MODEL,
+    "random_seed": RANDOM_SEED,
+    "dataset_path": DATASET_PATH,
+    "test_dataset_path": TEST_DATASET_PATH,
+    "max_seq_length": MAX_SEQ_LENGTH,
+    "train_test_split": TRAIN_TEST_SPLIT,
+    "fuzzy_match_threshold": FUZZY_MATCH_THRESHOLD,
     "lora_config": {
-        "r": peft_config.r,
-        "lora_alpha": peft_config.lora_alpha,
-        "lora_dropout": peft_config.lora_dropout,
-        "target_modules": list(peft_config.target_modules) if isinstance(peft_config.target_modules, set) else peft_config.target_modules,
+        "r": LORA_R,
+        "lora_alpha": LORA_ALPHA,
+        "lora_dropout": LORA_DROPOUT,
+        "target_modules": LORA_TARGET_MODULES,
     },
     "training_args": {
-        "num_train_epochs": sft_config.num_train_epochs,
-        "per_device_train_batch_size": sft_config.per_device_train_batch_size,
-        "gradient_accumulation_steps": sft_config.gradient_accumulation_steps,
-        "learning_rate": sft_config.learning_rate,
-        "warmup_steps": sft_config.warmup_steps,
-        "bf16": sft_config.bf16,
+        "num_train_epochs": NUM_TRAIN_EPOCHS,
+        "per_device_train_batch_size": PER_DEVICE_TRAIN_BATCH_SIZE,
+        "per_device_eval_batch_size": PER_DEVICE_EVAL_BATCH_SIZE,
+        "gradient_accumulation_steps": GRADIENT_ACCUMULATION_STEPS,
+        "learning_rate": LEARNING_RATE,
+        "warmup_ratio": WARMUP_RATIO,
+        "lr_scheduler_type": LR_SCHEDULER_TYPE,
+        "weight_decay": WEIGHT_DECAY,
+        "max_grad_norm": MAX_GRAD_NORM,
+        "optimizer": OPTIMIZER,
+        "bf16": True,
+    },
+    "early_stopping": {
+        "patience": EARLY_STOPPING_PATIENCE,
+        "threshold": EARLY_STOPPING_THRESHOLD,
+    },
+    "generation_config": {
+        "max_new_tokens": GENERATION_MAX_NEW_TOKENS,
+        "temperature": GENERATION_TEMPERATURE,
+        "top_p": GENERATION_TOP_P,
+        "repetition_penalty": GENERATION_REPETITION_PENALTY,
     },
     "dataset_info": {
         "train_samples": len(train_data),
@@ -1122,8 +1198,8 @@ Results Folder: {results_folder}
 
 MODEL CONFIGURATION
 {'='*80}
-Base Model: {base_model}
-Output Model: {new_model}
+Base Model: {BASE_MODEL}
+Output Model: {NEW_MODEL}
 
 DATASET
 {'='*80}

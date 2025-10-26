@@ -1,0 +1,5602 @@
+[
+  {
+    "conversation_idx": 0,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "455 elm street, cedar falls",
+    "ground_truth_value": "455 elm street, cedar falls",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4387",
+    "ground_truth_value": "4387",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "tech haven",
+    "ground_truth_value": "tech haven",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "45",
+    "ground_truth_value": "45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary was reported at a local electronics store, resulting in the theft of several high-value items.",
+    "ground_truth_value": "a burglary was reported at a local electronics store, resulting in the theft of several high-value items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 0,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, rivertown",
+    "ground_truth_value": "456 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4721",
+    "ground_truth_value": "4721",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "18:45",
+    "ground_truth_value": "18:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a masked individual threatened a cashier and stole cash from the register during business hours.",
+    "ground_truth_value": "a masked individual threatened a cashier and stole cash from the register during business hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security camera footage",
+    "ground_truth_value": "security camera footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 1,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the cash register",
+    "ground_truth_value": "fingerprints on the cash register",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "5042",
+    "ground_truth_value": "5042",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "rivertown electronics",
+    "ground_truth_value": "rivertown electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "michael thompson",
+    "ground_truth_value": "michael thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a break-in occurred at a local electronics store during the early hours.",
+    "ground_truth_value": "a break-in occurred at a local electronics store during the early hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 28, 2025",
+    "ground_truth_value": "september 28, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "cctv footage",
+    "ground_truth_value": "cctv footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 2,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a pair of gloves",
+    "ground_truth_value": "a pair of gloves",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1124",
+    "ground_truth_value": "1124",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "emily tran",
+    "ground_truth_value": "emily tran",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 3,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security camera footage",
+    "ground_truth_value": "security camera footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "78 oak street, metropolis",
+    "ground_truth_value": "78 oak street, metropolis",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4567",
+    "ground_truth_value": "4567",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "mr. timothy carter",
+    "ground_truth_value": "mr. timothy carter",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "35",
+    "ground_truth_value": "35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "08:45",
+    "ground_truth_value": "08:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary was reported at a residential home, where valuable items were stolen.",
+    "ground_truth_value": "a burglary was reported at a residential home, where valuable items were stolen.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a shoe print",
+    "ground_truth_value": "a shoe print",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 4,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a broken window fragment",
+    "ground_truth_value": "a broken window fragment",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "45 oak street, riverton",
+    "ground_truth_value": "45 oak street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "9876",
+    "ground_truth_value": "9876",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverton jewelers",
+    "ground_truth_value": "riverton jewelers",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah jennings",
+    "ground_truth_value": "sarah jennings",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 9,
+    "question": "What describes Victim_Email in the text?",
+    "entity_key": "Victim_Email",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft was reported at a local jewelry store where several items were stolen.",
+    "ground_truth_value": "a theft was reported at a local jewelry store where several items were stolen.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "cctv footage",
+    "ground_truth_value": "cctv footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 5,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "john doe",
+    "ground_truth_value": "john doe",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, fairview",
+    "ground_truth_value": "456 oak street, fairview",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1342",
+    "ground_truth_value": "1342",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom harris",
+    "ground_truth_value": "tom harris",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a masked individual entered a convenience store and demanded cash from the register.",
+    "ground_truth_value": "a masked individual entered a convenience store and demanded cash from the register.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage from the store",
+    "ground_truth_value": "security footage from the store",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 6,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the counter",
+    "ground_truth_value": "fingerprints on the counter",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "8472",
+    "ground_truth_value": "8472",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a personal electronic device was reported stolen from the victim's vehicle.",
+    "ground_truth_value": "a personal electronic device was reported stolen from the victim's vehicle.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 7,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2148",
+    "ground_truth_value": "2148",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "thomas bright",
+    "ground_truth_value": "thomas bright",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a break-in occurred at a local jewelry store, resulting in theft of valuable items.",
+    "ground_truth_value": "a break-in occurred at a local jewelry store, resulting in theft of valuable items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a black glove",
+    "ground_truth_value": "a black glove",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 8,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 pine street, rivertown",
+    "ground_truth_value": "456 pine street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3782",
+    "ground_truth_value": "3782",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "karen lin",
+    "ground_truth_value": "karen lin",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "15:45",
+    "ground_truth_value": "15:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft of electronic equipment took place at a local electronics store.",
+    "ground_truth_value": "a theft of electronic equipment took place at a local electronics store.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprint samples",
+    "ground_truth_value": "fingerprint samples",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "discarded backpack",
+    "ground_truth_value": "discarded backpack",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 9,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, maplewood",
+    "ground_truth_value": "456 elm street, maplewood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "623",
+    "ground_truth_value": "623",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "maplewood bakery",
+    "ground_truth_value": "maplewood bakery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "35",
+    "ground_truth_value": "35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah johnson",
+    "ground_truth_value": "sarah johnson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary occurred at a local bakery during early morning hours.",
+    "ground_truth_value": "a burglary occurred at a local bakery during early morning hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints from the scene",
+    "ground_truth_value": "fingerprints from the scene",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a stolen cash register",
+    "ground_truth_value": "a stolen cash register",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 10,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "video footage from nearby cameras",
+    "ground_truth_value": "video footage from nearby cameras",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "45 elm street, riverton",
+    "ground_truth_value": "45 elm street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1245",
+    "ground_truth_value": "1245",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary occurred in which electronics and jewelry were stolen.",
+    "ground_truth_value": "a residential burglary occurred in which electronics and jewelry were stolen.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "discarded clothing",
+    "ground_truth_value": "discarded clothing",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 11,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, rivertown",
+    "ground_truth_value": "456 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4321",
+    "ground_truth_value": "4321",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "tech haven",
+    "ground_truth_value": "tech haven",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft of electronics was reported at a local retail store.",
+    "ground_truth_value": "a theft of electronics was reported at a local retail store.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security camera footage",
+    "ground_truth_value": "security camera footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a discarded backpack",
+    "ground_truth_value": "a discarded backpack",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 12,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "7421",
+    "ground_truth_value": "7421",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "john doe",
+    "ground_truth_value": "john doe",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "35",
+    "ground_truth_value": "35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "18:45",
+    "ground_truth_value": "18:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a reported burglary occurred at a residential home, where several valuables were stolen.",
+    "ground_truth_value": "a reported burglary occurred at a residential home, where several valuables were stolen.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "crowbar",
+    "ground_truth_value": "crowbar",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 13,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "footprint",
+    "ground_truth_value": "footprint",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2378",
+    "ground_truth_value": "2378",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "techzone electronics",
+    "ground_truth_value": "techzone electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "45",
+    "ground_truth_value": "45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom harrison",
+    "ground_truth_value": "tom harrison",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary was reported at a local electronics store after the store's alarm system was triggered.",
+    "ground_truth_value": "a burglary was reported at a local electronics store after the store's alarm system was triggered.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "broken glass from the front door",
+    "ground_truth_value": "broken glass from the front door",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 14,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "several stolen items",
+    "ground_truth_value": "several stolen items",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, oakwood",
+    "ground_truth_value": "456 elm street, oakwood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2943",
+    "ground_truth_value": "2943",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft of personal belongings was reported at oakwood community center.",
+    "ground_truth_value": "a theft of personal belongings was reported at oakwood community center.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 15,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "455 elm street, rivertown",
+    "ground_truth_value": "455 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3521",
+    "ground_truth_value": "3521",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "rivertown art gallery",
+    "ground_truth_value": "rivertown art gallery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom henderson",
+    "ground_truth_value": "tom henderson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "vandalism",
+    "ground_truth_value": "vandalism",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "the front windows of the rivertown art gallery were smashed, and graffiti was spray-painted on the exterior walls.",
+    "ground_truth_value": "the front windows of the rivertown art gallery were smashed, and graffiti was spray-painted on the exterior walls.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fragments of glass",
+    "ground_truth_value": "fragments of glass",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 16,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2457",
+    "ground_truth_value": "2457",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "john anderson",
+    "ground_truth_value": "john anderson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "vandalism",
+    "ground_truth_value": "vandalism",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "graffiti was found scrawled across the side of a commercial building.",
+    "ground_truth_value": "graffiti was found scrawled across the side of a commercial building.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "spray paint cans",
+    "ground_truth_value": "spray paint cans",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "photographs of the graffiti",
+    "ground_truth_value": "photographs of the graffiti",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 17,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "none identified",
+    "ground_truth_value": "none identified",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "432 elm street, rivertown",
+    "ground_truth_value": "432 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3472",
+    "ground_truth_value": "3472",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "01:45",
+    "ground_truth_value": "01:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "the suspect unlawfully entered the residence and stole various electronic items.",
+    "ground_truth_value": "the suspect unlawfully entered the residence and stole various electronic items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 18,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, maplewood",
+    "ground_truth_value": "456 oak street, maplewood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "5678",
+    "ground_truth_value": "5678",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "tech haven electronics",
+    "ground_truth_value": "tech haven electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "mark rodriguez",
+    "ground_truth_value": "mark rodriguez",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft of electronic equipment was reported at a local electronics store.",
+    "ground_truth_value": "a theft of electronic equipment was reported at a local electronics store.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 19,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "none identified",
+    "ground_truth_value": "none identified",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, springfield",
+    "ground_truth_value": "456 elm street, springfield",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2235",
+    "ground_truth_value": "2235",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "emily carter",
+    "ground_truth_value": "emily carter",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft occurred at a local business involving the disappearance of cash from the register.",
+    "ground_truth_value": "a theft occurred at a local business involving the disappearance of cash from the register.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 20,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, greenfield",
+    "ground_truth_value": "456 oak street, greenfield",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1420",
+    "ground_truth_value": "1420",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 2,
+    "question": "What describes Officer_Name in the text?",
+    "entity_key": "Officer_Name",
+    "predicted_value": "officer samuel reed",
+    "ground_truth_value": "officer samuel reed",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "unauthorized entry into a residential property resulted in theft of personal belongings.",
+    "ground_truth_value": "unauthorized entry into a residential property resulted in theft of personal belongings.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 21,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4571",
+    "ground_truth_value": "4571",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 2,
+    "question": "What describes Officer_Name in the text?",
+    "entity_key": "Officer_Name",
+    "predicted_value": "jessica lane",
+    "ground_truth_value": "jessica lane",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "mr. harold green",
+    "ground_truth_value": "mr. harold green",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft occurred at a local retail store, resulting in the loss of merchandise valued at approximately $1,200.",
+    "ground_truth_value": "a theft occurred at a local retail store, resulting in the loss of merchandise valued at approximately $1,200.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 22,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the display case",
+    "ground_truth_value": "fingerprints on the display case",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, greenville",
+    "ground_truth_value": "456 oak street, greenville",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1234",
+    "ground_truth_value": "1234",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "assault",
+    "ground_truth_value": "assault",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a physical altercation occurred between two individuals in a public park.",
+    "ground_truth_value": "a physical altercation occurred between two individuals in a public park.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage from nearby buildings",
+    "ground_truth_value": "surveillance footage from nearby buildings",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "photographs of the scene",
+    "ground_truth_value": "photographs of the scene",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 23,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "john doe",
+    "ground_truth_value": "john doe",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, rivertown",
+    "ground_truth_value": "456 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2357",
+    "ground_truth_value": "2357",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "thomas granger",
+    "ground_truth_value": "thomas granger",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "18:45",
+    "ground_truth_value": "18:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a retail store was robbed at gunpoint during business hours.",
+    "ground_truth_value": "a retail store was robbed at gunpoint during business hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "discarded weapon",
+    "ground_truth_value": "a discarded weapon",
+    "similarity_score": 94.11764705882352,
+    "is_exact": false
+  },
+  {
+    "conversation_idx": 24,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak terrace, maplewood",
+    "ground_truth_value": "456 oak terrace, maplewood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1123",
+    "ground_truth_value": "1123",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "john smith",
+    "ground_truth_value": "john smith",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "35",
+    "ground_truth_value": "35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary was reported, with several items stolen from the property.",
+    "ground_truth_value": "a residential burglary was reported, with several items stolen from the property.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "broken window glass shard",
+    "ground_truth_value": "a broken window glass shard",
+    "similarity_score": 96.15384615384616,
+    "is_exact": false
+  },
+  {
+    "conversation_idx": 25,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "459 oak street, rivertown",
+    "ground_truth_value": "459 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "5823",
+    "ground_truth_value": "5823",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "rivertown electronics",
+    "ground_truth_value": "rivertown electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 9,
+    "question": "What describes Victim_Email in the text?",
+    "entity_key": "Victim_Email",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a break-in occurred at rivertown electronics, resulting in the theft of several high-value items.",
+    "ground_truth_value": "a break-in occurred at rivertown electronics, resulting in the theft of several high-value items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 26,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "245 elm street, central city",
+    "ground_truth_value": "245 elm street, central city",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1123",
+    "ground_truth_value": "1123",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:30",
+    "ground_truth_value": "19:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "an armed robbery occurred at a local convenience store, resulting in the theft of cash and goods.",
+    "ground_truth_value": "an armed robbery occurred at a local convenience store, resulting in the theft of cash and goods.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the counter",
+    "ground_truth_value": "fingerprints on the counter",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 27,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, oakwood",
+    "ground_truth_value": "456 elm street, oakwood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1234",
+    "ground_truth_value": "1234",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "04:20",
+    "ground_truth_value": "04:20",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary occurred in the early hours of the morning, resulting in the theft of valuables.",
+    "ground_truth_value": "a residential burglary occurred in the early hours of the morning, resulting in the theft of valuables.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a torn piece of fabric",
+    "ground_truth_value": "a torn piece of fabric",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a broken window pane",
+    "ground_truth_value": "a broken window pane",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 28,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "none identified",
+    "ground_truth_value": "none identified",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, maplewood",
+    "ground_truth_value": "456 oak street, maplewood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4573",
+    "ground_truth_value": "4573",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "oakwood grocery",
+    "ground_truth_value": "oakwood grocery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "john oakley",
+    "ground_truth_value": "john oakley",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft was reported at a local grocery store involving the disappearance of various high-value items.",
+    "ground_truth_value": "a theft was reported at a local grocery store involving the disappearance of various high-value items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "store surveillance footage",
+    "ground_truth_value": "store surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 29,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the display case",
+    "ground_truth_value": "fingerprints on the display case",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3457",
+    "ground_truth_value": "3457",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "32",
+    "ground_truth_value": "32",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary took place in the early hours, resulting in the theft of electronics and jewelry.",
+    "ground_truth_value": "a residential burglary took place in the early hours, resulting in the theft of electronics and jewelry.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 30,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "45 oak street, riverton",
+    "ground_truth_value": "45 oak street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1234",
+    "ground_truth_value": "1234",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "john doe",
+    "ground_truth_value": "john doe",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "assault",
+    "ground_truth_value": "assault",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a verbal altercation escalated into a physical confrontation between two individuals.",
+    "ground_truth_value": "a verbal altercation escalated into a physical confrontation between two individuals.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 31,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "bloodstained shirt",
+    "ground_truth_value": "bloodstained shirt",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2345",
+    "ground_truth_value": "2345",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "rivertown electronics",
+    "ground_truth_value": "rivertown electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah wilson",
+    "ground_truth_value": "sarah wilson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 9,
+    "question": "What describes Victim_Email in the text?",
+    "entity_key": "Victim_Email",
+    "predicted_value": "sarah.wilson@rivertownelectronics.com",
+    "ground_truth_value": "sarah.wilson@rivertownelectronics.com",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft was reported involving electronics from a local retail store.",
+    "ground_truth_value": "a theft was reported involving electronics from a local retail store.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on display case",
+    "ground_truth_value": "fingerprints on display case",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 32,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "789 elm street, brookfield",
+    "ground_truth_value": "789 elm street, brookfield",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1274",
+    "ground_truth_value": "1274",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "29",
+    "ground_truth_value": "29",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 9,
+    "question": "What describes Victim_Email in the text?",
+    "entity_key": "Victim_Email",
+    "predicted_value": "sarah.thompson@email.com",
+    "ground_truth_value": "sarah.thompson@email.com",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "18:45",
+    "ground_truth_value": "18:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a male suspect forcibly took cash and personal belongings from a store employee at the elm grocery store.",
+    "ground_truth_value": "a male suspect forcibly took cash and personal belongings from a store employee at the elm grocery store.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage from the store's cameras",
+    "ground_truth_value": "surveillance footage from the store's cameras",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 33,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "michael stevens",
+    "ground_truth_value": "michael stevens",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "45 oak street, riverbend",
+    "ground_truth_value": "45 oak street, riverbend",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "6743",
+    "ground_truth_value": "6743",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverbend jewelers",
+    "ground_truth_value": "riverbend jewelers",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "38",
+    "ground_truth_value": "38",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary was reported at a local jewelry store during the early morning hours.",
+    "ground_truth_value": "a burglary was reported at a local jewelry store during the early morning hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "broken glass shards",
+    "ground_truth_value": "broken glass shards",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 34,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, riverton",
+    "ground_truth_value": "456 oak street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "12345",
+    "ground_truth_value": "12345",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverton jewelry",
+    "ground_truth_value": "riverton jewelry",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "thomas blackwell",
+    "ground_truth_value": "thomas blackwell",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "none identified",
+    "ground_truth_value": "none identified",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary occurred at a local jewelry store after hours.",
+    "ground_truth_value": "a burglary occurred at a local jewelry store after hours.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "broken glass",
+    "ground_truth_value": "broken glass",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 35,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, rivertown",
+    "ground_truth_value": "456 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4321",
+    "ground_truth_value": "4321",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 2,
+    "question": "What describes Officer_Name in the text?",
+    "entity_key": "Officer_Name",
+    "predicted_value": "officer jenna marks",
+    "ground_truth_value": "officer jenna marks",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "rivertown convenience store",
+    "ground_truth_value": "rivertown convenience store",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom bennett",
+    "ground_truth_value": "tom bennett",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "19:45",
+    "ground_truth_value": "19:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "robbery",
+    "ground_truth_value": "robbery",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a masked individual robbed the convenience store at gunpoint.",
+    "ground_truth_value": "a masked individual robbed the convenience store at gunpoint.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 36,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "gun used in the crime",
+    "ground_truth_value": "gun used in the crime",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 elm street, rivertown",
+    "ground_truth_value": "456 elm street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "0245",
+    "ground_truth_value": "0245",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 2,
+    "question": "What describes Officer_Name in the text?",
+    "entity_key": "Officer_Name",
+    "predicted_value": "officer jenna smith",
+    "ground_truth_value": "officer jenna smith",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "fraud",
+    "ground_truth_value": "fraud",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a case of fraud was reported involving stolen identities used to open fraudulent accounts.",
+    "ground_truth_value": "a case of fraud was reported involving stolen identities used to open fraudulent accounts.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 37,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "452 oak street, riverton",
+    "ground_truth_value": "452 oak street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4772",
+    "ground_truth_value": "4772",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverton jewelers",
+    "ground_truth_value": "riverton jewelers",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft occurred at a local jewelry store involving multiple items valued at approximately $5,000.",
+    "ground_truth_value": "a theft occurred at a local jewelry store involving multiple items valued at approximately $5,000.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the display case",
+    "ground_truth_value": "fingerprints on the display case",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 38,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3492",
+    "ground_truth_value": "3492",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "john thompson",
+    "ground_truth_value": "john thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary was reported involving the theft of electronics from the victim's home.",
+    "ground_truth_value": "a residential burglary was reported involving the theft of electronics from the victim's home.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 39,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "7685",
+    "ground_truth_value": "7685",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom hargrove",
+    "ground_truth_value": "tom hargrove",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:35",
+    "ground_truth_value": "14:35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a laptop and several electronic devices were stolen from a local business.",
+    "ground_truth_value": "a laptop and several electronic devices were stolen from a local business.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the counter",
+    "ground_truth_value": "fingerprints on the counter",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 40,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage from the store",
+    "ground_truth_value": "surveillance footage from the store",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, riverdale",
+    "ground_truth_value": "456 oak street, riverdale",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2345",
+    "ground_truth_value": "2345",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverdale electronics",
+    "ground_truth_value": "riverdale electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom baker",
+    "ground_truth_value": "tom baker",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 9,
+    "question": "What describes Victim_Email in the text?",
+    "entity_key": "Victim_Email",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "an unknown suspect broke into the riverdale electronics store and stole multiple items.",
+    "ground_truth_value": "an unknown suspect broke into the riverdale electronics store and stole multiple items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 41,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "none identified",
+    "ground_truth_value": "none identified",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "45 oak street, riverton",
+    "ground_truth_value": "45 oak street, riverton",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4521",
+    "ground_truth_value": "4521",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "riverton high school",
+    "ground_truth_value": "riverton high school",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:30",
+    "ground_truth_value": "14:30",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft of electronic equipment was reported at a local school.",
+    "ground_truth_value": "a theft of electronic equipment was reported at a local school.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security camera footage",
+    "ground_truth_value": "security camera footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 42,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the equipment",
+    "ground_truth_value": "fingerprints on the equipment",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "4567",
+    "ground_truth_value": "4567",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "mr. john smith",
+    "ground_truth_value": "mr. john smith",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 8,
+    "question": "What describes Victim_CEO in the text?",
+    "entity_key": "Victim_CEO",
+    "predicted_value": "mr. john smith",
+    "ground_truth_value": "mr. john smith",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a burglary occurred at a local electronics store, resulting in the theft of several high-value items.",
+    "ground_truth_value": "a burglary occurred at a local electronics store, resulting in the theft of several high-value items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "security footage",
+    "ground_truth_value": "security footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 43,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "crowbar",
+    "ground_truth_value": "crowbar",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 pine street, centerville",
+    "ground_truth_value": "456 pine street, centerville",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "3421",
+    "ground_truth_value": "3421",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "sarah thompson",
+    "ground_truth_value": "sarah thompson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "01:00",
+    "ground_truth_value": "01:00",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary occurred, resulting in the theft of various personal items.",
+    "ground_truth_value": "a residential burglary occurred, resulting in the theft of various personal items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 44,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, pleasantville",
+    "ground_truth_value": "456 oak street, pleasantville",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1234",
+    "ground_truth_value": "1234",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "emily johnson",
+    "ground_truth_value": "emily johnson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary occurred resulting in theft of electronics and cash.",
+    "ground_truth_value": "a residential burglary occurred resulting in theft of electronics and cash.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints from the front door handle",
+    "ground_truth_value": "fingerprints from the front door handle",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a shoe print near the window",
+    "ground_truth_value": "a shoe print near the window",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 45,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, rivertown",
+    "ground_truth_value": "456 oak street, rivertown",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2345",
+    "ground_truth_value": "2345",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "emily johnson",
+    "ground_truth_value": "emily johnson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "32",
+    "ground_truth_value": "32",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a residential burglary occurred, resulting in the theft of various electronics and jewelry.",
+    "ground_truth_value": "a residential burglary occurred, resulting in the theft of various electronics and jewelry.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 28, 2025",
+    "ground_truth_value": "september 28, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "broken window",
+    "ground_truth_value": "a broken window",
+    "similarity_score": 92.85714285714286,
+    "is_exact": false
+  },
+  {
+    "conversation_idx": 46,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints on the window sill",
+    "ground_truth_value": "fingerprints on the window sill",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, maplewood",
+    "ground_truth_value": "456 oak street, maplewood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1123",
+    "ground_truth_value": "1123",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "maplewood electronics",
+    "ground_truth_value": "maplewood electronics",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 6,
+    "question": "What describes Victim_Owner in the text?",
+    "entity_key": "Victim_Owner",
+    "predicted_value": "tom richardson",
+    "ground_truth_value": "tom richardson",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "theft",
+    "ground_truth_value": "theft",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a theft occurred at maplewood electronics where several high-value gadgets were stolen.",
+    "ground_truth_value": "a theft occurred at maplewood electronics where several high-value gadgets were stolen.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "video surveillance footage",
+    "ground_truth_value": "video surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 47,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "n/a",
+    "ground_truth_value": "n/a",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 pine street, elmwood",
+    "ground_truth_value": "456 pine street, elmwood",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "1278",
+    "ground_truth_value": "1278",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "maria sanchez",
+    "ground_truth_value": "maria sanchez",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "34",
+    "ground_truth_value": "34",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "14:45",
+    "ground_truth_value": "14:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "a break-in was reported at a local residence resulting in the theft of electronics and jewelry.",
+    "ground_truth_value": "a break-in was reported at a local residence resulting in the theft of electronics and jewelry.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "a shoe print",
+    "ground_truth_value": "a shoe print",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "surveillance footage",
+    "ground_truth_value": "surveillance footage",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 48,
+    "qa_idx": 16,
+    "question": "What describes Witness_Name in the text?",
+    "entity_key": "Witness_Name",
+    "predicted_value": "not provided",
+    "ground_truth_value": "not provided",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 0,
+    "question": "What describes Location in the text?",
+    "entity_key": "Location",
+    "predicted_value": "456 oak street, greenfield",
+    "ground_truth_value": "456 oak street, greenfield",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 1,
+    "question": "What describes Officer_BadgeNumber in the text?",
+    "entity_key": "Officer_BadgeNumber",
+    "predicted_value": "2134",
+    "ground_truth_value": "2134",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 3,
+    "question": "What describes Victim_Name in the text?",
+    "entity_key": "Victim_Name",
+    "predicted_value": "john smith",
+    "ground_truth_value": "john smith",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 4,
+    "question": "What describes Victim_Age in the text?",
+    "entity_key": "Victim_Age",
+    "predicted_value": "35",
+    "ground_truth_value": "35",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 5,
+    "question": "What describes Victim_AgeRange in the text?",
+    "entity_key": "Victim_AgeRange",
+    "predicted_value": "adult",
+    "ground_truth_value": "adult",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 10,
+    "question": "What describes Crime_Time in the text?",
+    "entity_key": "Crime_Time",
+    "predicted_value": "03:45",
+    "ground_truth_value": "03:45",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 11,
+    "question": "What describes Crime_Type in the text?",
+    "entity_key": "Crime_Type",
+    "predicted_value": "burglary",
+    "ground_truth_value": "burglary",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 12,
+    "question": "What describes Crime_Summary in the text?",
+    "entity_key": "Crime_Summary",
+    "predicted_value": "an unauthorized entry was made into a private residence resulting in the theft of valuable items.",
+    "ground_truth_value": "an unauthorized entry was made into a private residence resulting in the theft of valuable items.",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 13,
+    "question": "What describes Crime_Date in the text?",
+    "entity_key": "Crime_Date",
+    "predicted_value": "september 30, 2025",
+    "ground_truth_value": "september 30, 2025",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 14,
+    "question": "What describes Crime_Status in the text?",
+    "entity_key": "Crime_Status",
+    "predicted_value": "under investigation",
+    "ground_truth_value": "under investigation",
+    "similarity_score": 100,
+    "is_exact": true
+  },
+  {
+    "conversation_idx": 49,
+    "qa_idx": 15,
+    "question": "What describes Evidence_Type in the text?",
+    "entity_key": "Evidence_Type",
+    "predicted_value": "fingerprints",
+    "ground_truth_value": "fingerprints",
+    "similarity_score": 100,
+    "is_exact": true
+  }
+]
