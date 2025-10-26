@@ -1,3 +1,39 @@
+"""
+Fine-tuning script for Named Entity Recognition (NER) task using Qwen3-0.6B model.
+
+OPTIMIZATIONS FOR 2K DATASET (v2):
+=================================
+1. LoRA Configuration:
+   - r=12 (reduced from 16) - prevents overfitting on small dataset
+   - lora_alpha=24 (proportional to r)
+   - lora_dropout=0.1 (increased for regularization)
+
+2. Training Hyperparameters:
+   - learning_rate=1.5e-5 (reduced from 2.4e-5) - more conservative
+   - num_epochs=4 (reduced from 6) - prevents overfitting
+   - gradient_accumulation_steps=24 (increased for stability)
+   - weight_decay=0.01 (increased for regularization)
+   - max_grad_norm=0.5 (tighter clipping)
+   - warmup_ratio=0.05 (appropriate for small dataset)
+
+3. Evaluation & Checkpointing:
+   - eval_steps=50 (more frequent monitoring)
+   - save_steps=50 (more frequent checkpoints)
+   - save_total_limit=3 (keep top 3 models)
+   - Early stopping: patience=5, threshold=0.001
+
+4. Inference Improvements:
+   - Temperature sampling (0.1) for better quality
+   - Nucleus sampling (top_p=0.95)
+   - Repetition penalty (1.1)
+   - Increased max_new_tokens=256
+
+5. Fuzzy Matching Evaluation:
+   - Comprehensive fuzzy match tracking with similarity scores
+   - Separate JSON files for detailed match analysis
+   - Aggregated statistics in metrics files
+"""
+
 import os
 import re
 import json
@@ -13,6 +49,7 @@ from datasets import load_dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
+    EarlyStoppingCallback,
 )
 from peft import LoraConfig
 from trl import SFTTrainer, SFTConfig
@@ -227,6 +264,7 @@ def infer_using_model(report_text, question, tok, mdl, dev):
     """
     Uses a pre-trained model to process a crime report and infer answers to specific questions.
     Optimized for faster inference with robust JSON extraction.
+    Includes temperature-based sampling for better generation quality.
     """
     # Stricter system prompt that enforces JSON-only output
     test_messages = [
@@ -250,13 +288,16 @@ def infer_using_model(report_text, question, tok, mdl, dev):
     with torch.no_grad():
         outputs = mdl.generate(
             **inputs, 
-            max_new_tokens=200,  # Increased slightly to accommodate JSON structure
+            max_new_tokens=256,           # Increased from 200 for more complex outputs
             min_new_tokens=1,
-            do_sample=False,  # Greedy decoding (fastest)
-            num_beams=1,  # No beam search (faster)
+            do_sample=True,               # Enable sampling for better quality
+            temperature=0.1,              # Low temperature for focused, deterministic outputs
+            top_p=0.95,                   # Nucleus sampling
+            repetition_penalty=1.1,       # Slight penalty to avoid repetition
+            num_beams=1,                  # Keep at 1 for speed
             pad_token_id=tok.pad_token_id,
             eos_token_id=tok.eos_token_id,
-            use_cache=True,  # Enable KV cache for faster generation
+            use_cache=True,               # Enable KV cache for faster generation
         )
 
     new_tokens = outputs[0, input_token_length:]
@@ -593,6 +634,17 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
     logger.info(f"  Empty Sets: {total_empty_sets}")
     logger.info(f"  Empty Sets Correct: {total_empty_set_correct}")
 
+    # Calculate fuzzy match statistics
+    total_fuzzy_matches = sum(len(r['metrics']['fuzzy_matches']) for r in all_results)
+    fuzzy_match_scores = [
+        match['similarity'] 
+        for r in all_results 
+        for match in r['metrics']['fuzzy_matches']
+    ]
+    avg_fuzzy_score = sum(fuzzy_match_scores) / len(fuzzy_match_scores) if fuzzy_match_scores else 0.0
+    min_fuzzy_score = min(fuzzy_match_scores) if fuzzy_match_scores else 0.0
+    max_fuzzy_score = max(fuzzy_match_scores) if fuzzy_match_scores else 0.0
+    
     eval_summary = {
         "total_predictions": total_predictions,
         "precision": precision,
@@ -609,9 +661,25 @@ def test_model_on_dataset(test_dataset, tok, mdl, dev):
         "total_empty_sets": total_empty_sets,
         "total_empty_set_correct": total_empty_set_correct,
         "conversations_processed": conversations_processed,
-        "conversations_skipped": conversations_skipped
+        "conversations_skipped": conversations_skipped,
+        "fuzzy_match_stats": {
+            "total_fuzzy_matches": total_fuzzy_matches,
+            "avg_similarity_score": avg_fuzzy_score,
+            "min_similarity_score": min_fuzzy_score,
+            "max_similarity_score": max_fuzzy_score,
+            "total_exact_tp": sum(1 for r in all_results for m in r['metrics']['fuzzy_matches'] if m['similarity'] == 100),
+            "total_fuzzy_tp": sum(1 for r in all_results for m in r['metrics']['fuzzy_matches'] if m['similarity'] < 100)
+        }
     }
 
+    logger.info("\nFuzzy Match Statistics:")
+    logger.info(f"  Total fuzzy matches: {total_fuzzy_matches}")
+    logger.info(f"  Exact matches (100%): {eval_summary['fuzzy_match_stats']['total_exact_tp']}")
+    logger.info(f"  Fuzzy matches (<100%): {eval_summary['fuzzy_match_stats']['total_fuzzy_tp']}")
+    logger.info(f"  Average similarity: {avg_fuzzy_score:.2f}%")
+    logger.info(f"  Min similarity: {min_fuzzy_score:.2f}%")
+    logger.info(f"  Max similarity: {max_fuzzy_score:.2f}%")
+    
     logger.info("Evaluation summary saved to eval_summary variable")
     return all_results, eval_summary
 
@@ -726,12 +794,12 @@ print("...\n")
 
 logger.info(f"Dataset preparation completed: {len(train_data)} train examples, {len(eval_data)} eval examples, {len(test_data)} test conversations")
 
-# LoRA configuration (optimized for 0.6B model - increased capacity)
+# LoRA configuration (optimized for 0.6B model with 2k dataset)
 logger.info("Configuring LoRA parameters")
 peft_config = LoraConfig(
-    r=16,                   # Increased from 8 for better learning capacity on structured JSON task
-    lora_alpha=32,          # Scaled proportionally (2*r)
-    lora_dropout=0.05,      # Reduced from 0.1 to allow more learning
+    r=12,                   # Reduced from 16 for smaller dataset (2k) - prevents overfitting
+    lora_alpha=24,          # Scaled proportionally (2*r)
+    lora_dropout=0.1,       # Increased from 0.05 for better regularization on small dataset
     bias="none",
     task_type="CAUSAL_LM",
     target_modules=[
@@ -741,7 +809,7 @@ peft_config = LoraConfig(
 )
 logger.info("LoRA configuration created (will be applied by SFTTrainer)")
 
-# Training configuration (optimized for 0.6B model with 4k samples)
+# Training configuration (optimized for 0.6B model with 2k dataset)
 logger.info("Setting up training configuration")
 sft_config = SFTConfig(
     output_dir=new_model,
@@ -749,47 +817,52 @@ sft_config = SFTConfig(
     # Batch settings (memory-optimized)
     per_device_train_batch_size=1,        # Keep at 1 for memory efficiency
     per_device_eval_batch_size=1,         # Keep at 1 for memory efficiency
-    gradient_accumulation_steps=16,       # Reduced from 32 for faster updates (effective batch size ≈ 16)
+    gradient_accumulation_steps=24,       # Increased from 16 for more stable gradients (effective batch size ≈ 24)
     
-    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL)
-    num_train_epochs=6,                   # Increased from 3 - more epochs for 4k dataset
-    learning_rate=2.4e-5,                   # Increased from 1e-5 - 0.6B can handle higher LR
+    # Epochs & learning rate (OPTIMIZED FOR 0.6B MODEL WITH 2K DATASET)
+    num_train_epochs=4,                   # Reduced from 6 - prevents overfitting on small dataset
+    learning_rate=1.5e-5,                 # Reduced from 2.4e-5 - more conservative for 2k samples
     lr_scheduler_type="cosine",
-    warmup_ratio=0.1,                     # Increased from 0.05 for better stability
+    warmup_ratio=0.05,                    # Reduced from 0.1 - smaller dataset needs less warmup
     
     # Precision & stability
     fp16=False,
     bf16=True,
-    max_grad_norm=1,
+    max_grad_norm=0.5,                    # Reduced from 1.0 - tighter gradient clipping for stability
     gradient_checkpointing=True,
     gradient_checkpointing_kwargs={"use_reentrant": False},
     
     # Memory optimizations
-    optim="adamw_torch",                  # Standard AdamW optimizer for full precision training
-    weight_decay=0.001,                   # Reduced from 0.01 - less regularization for better learning
+    optim="adamw_torch",                  # Standard AdamW optimizer
+    weight_decay=0.01,                    # Increased from 0.001 - more regularization prevents overfitting
     group_by_length=True,
     
     # Logging & evaluation (more frequent for better monitoring)
     logging_steps=10,
     eval_strategy="steps",
-    eval_steps=100,                       # Increased frequency from 200 for better monitoring
+    eval_steps=50,                        # More frequent evaluation for small dataset
     save_strategy="steps",
-    save_steps=100,                       # Increased frequency from 200
-    save_total_limit=2,                   # Increased from 1 to keep best 2 checkpoints
+    save_steps=50,                        # More frequent checkpoints
+    save_total_limit=3,                   # Keep top 3 checkpoints for small dataset
     load_best_model_at_end=True,          # Load best checkpoint for evaluation
     metric_for_best_model="eval_loss",    # Use eval loss to determine best model
     greater_is_better=False,              # Lower eval loss is better
     
     # Dataset details
     dataset_text_field="text",
-    max_length=max_seq_length,            # Explicitly set max sequence length (now 1536)
+    max_length=max_seq_length,            # Explicitly set max sequence length (1536)
     packing=False,
     report_to="wandb",
 )
 logger.info(f"Training configuration created - Scheduler: {sft_config.lr_scheduler_type}, LR: {sft_config.learning_rate}, Optimizer: {sft_config.optim}")
 
-# Initialize trainer (without early stopping to reduce memory overhead)
-logger.info("Initializing SFTTrainer")
+# Initialize trainer with early stopping callback
+logger.info("Initializing SFTTrainer with early stopping")
+early_stopping_callback = EarlyStoppingCallback(
+    early_stopping_patience=5,      # Stop after 5 evaluations without improvement
+    early_stopping_threshold=0.001  # Minimum change to qualify as improvement
+)
+
 trainer = SFTTrainer(
     model=model,
     processing_class=tokenizer,
@@ -797,8 +870,9 @@ trainer = SFTTrainer(
     eval_dataset=eval_data,
     peft_config=peft_config,
     args=sft_config,
+    callbacks=[early_stopping_callback],
 )
-logger.info("Trainer initialized successfully")
+logger.info("Trainer initialized successfully with early stopping")
 
 # ✅ Reassign model to the LoRA-wrapped model from trainer
 # This ensures both pre- and post-training evals use the correct model reference
@@ -857,6 +931,11 @@ print(f"  Empty-Set Accuracy: {summary_pre['empty_set_accuracy']:.4f} ({summary_
 print("\nFormat Validation:")
 print(f"  Valid JSON %: {summary_pre['valid_json_pct']:.4f}")
 print(f"  Schema Valid %: {summary_pre['schema_valid_pct']:.4f}")
+print("\nFuzzy Match Statistics:")
+print(f"  Total Matches: {summary_pre['fuzzy_match_stats']['total_fuzzy_matches']}")
+print(f"  Exact (100%): {summary_pre['fuzzy_match_stats']['total_exact_tp']}")
+print(f"  Fuzzy (<100%): {summary_pre['fuzzy_match_stats']['total_fuzzy_tp']}")
+print(f"  Avg Similarity: {summary_pre['fuzzy_match_stats']['avg_similarity_score']:.2f}%")
 print("="*60 + "\n")
 
 # Train the model
@@ -930,6 +1009,11 @@ print(f"  Empty-Set Accuracy: {summary_post['empty_set_accuracy']:.4f} ({summary
 print("\nFormat Validation:")
 print(f"  Valid JSON %: {summary_post['valid_json_pct']:.4f}")
 print(f"  Schema Valid %: {summary_post['schema_valid_pct']:.4f}")
+print("\nFuzzy Match Statistics:")
+print(f"  Total Matches: {summary_post['fuzzy_match_stats']['total_fuzzy_matches']}")
+print(f"  Exact (100%): {summary_post['fuzzy_match_stats']['total_exact_tp']}")
+print(f"  Fuzzy (<100%): {summary_post['fuzzy_match_stats']['total_fuzzy_tp']}")
+print(f"  Avg Similarity: {summary_post['fuzzy_match_stats']['avg_similarity_score']:.2f}%")
 print("="*60)
 
 print("\n" + "="*60)
@@ -975,6 +1059,42 @@ with open(os.path.join(results_folder, "detailed_results_post_training.json"), '
 logger.info("Saving improvement metrics...")
 with open(os.path.join(results_folder, "metrics_improvement.json"), 'w') as f:
     json.dump(improvement, f, indent=2)
+
+# Save fuzzy match details
+logger.info("Saving fuzzy match details...")
+fuzzy_matches_pre = []
+for result in results_pre:
+    for match in result['metrics']['fuzzy_matches']:
+        fuzzy_matches_pre.append({
+            "conversation_idx": result['conversation_idx'],
+            "qa_idx": result['qa_idx'],
+            "question": result['question'],
+            "entity_key": match['key'],
+            "predicted_value": match['predicted'],
+            "ground_truth_value": match['ground_truth'],
+            "similarity_score": match['similarity'],
+            "is_exact": match['similarity'] == 100
+        })
+
+fuzzy_matches_post = []
+for result in results_post:
+    for match in result['metrics']['fuzzy_matches']:
+        fuzzy_matches_post.append({
+            "conversation_idx": result['conversation_idx'],
+            "qa_idx": result['qa_idx'],
+            "question": result['question'],
+            "entity_key": match['key'],
+            "predicted_value": match['predicted'],
+            "ground_truth_value": match['ground_truth'],
+            "similarity_score": match['similarity'],
+            "is_exact": match['similarity'] == 100
+        })
+
+with open(os.path.join(results_folder, "fuzzy_matches_pre_training.json"), 'w') as f:
+    json.dump(fuzzy_matches_pre, f, indent=2)
+
+with open(os.path.join(results_folder, "fuzzy_matches_post_training.json"), 'w') as f:
+    json.dump(fuzzy_matches_post, f, indent=2)
 
 # Save training history from trainer
 logger.info("Saving training history...")
@@ -1055,6 +1175,12 @@ F1 Score:         {summary_pre['f1']:.4f}
 Set-Exact-Match:  {summary_pre['set_exact_match']:.4f}
 Valid JSON %:     {summary_pre['valid_json_pct']:.4f}
 
+Fuzzy Match Stats (Pre):
+  Total Matches:  {summary_pre['fuzzy_match_stats']['total_fuzzy_matches']}
+  Exact (100%):   {summary_pre['fuzzy_match_stats']['total_exact_tp']}
+  Fuzzy (<100%):  {summary_pre['fuzzy_match_stats']['total_fuzzy_tp']}
+  Avg Similarity: {summary_pre['fuzzy_match_stats']['avg_similarity_score']:.2f}%
+
 POST-TRAINING METRICS
 {'='*80}
 Precision:        {summary_post['precision']:.4f}
@@ -1062,6 +1188,12 @@ Recall:           {summary_post['recall']:.4f}
 F1 Score:         {summary_post['f1']:.4f}
 Set-Exact-Match:  {summary_post['set_exact_match']:.4f}
 Valid JSON %:     {summary_post['valid_json_pct']:.4f}
+
+Fuzzy Match Stats (Post):
+  Total Matches:  {summary_post['fuzzy_match_stats']['total_fuzzy_matches']}
+  Exact (100%):   {summary_post['fuzzy_match_stats']['total_exact_tp']}
+  Fuzzy (<100%):  {summary_post['fuzzy_match_stats']['total_fuzzy_tp']}
+  Avg Similarity: {summary_post['fuzzy_match_stats']['avg_similarity_score']:.2f}%
 
 IMPROVEMENT (Post - Pre)
 {'='*80}
@@ -1072,10 +1204,12 @@ Set-Exact-Match:  {improvement['set_exact_match_delta']:+.4f}
 
 FILES SAVED
 {'='*80}
-- metrics_pre_training.json          : Pre-training evaluation summary
+- metrics_pre_training.json          : Pre-training evaluation summary (includes fuzzy stats)
 - detailed_results_pre_training.json : Detailed per-question pre-training results
-- metrics_post_training.json         : Post-training evaluation summary
+- fuzzy_matches_pre_training.json    : All fuzzy matches with similarity scores (pre)
+- metrics_post_training.json         : Post-training evaluation summary (includes fuzzy stats)
 - detailed_results_post_training.json: Detailed per-question post-training results
+- fuzzy_matches_post_training.json   : All fuzzy matches with similarity scores (post)
 - metrics_improvement.json           : Improvement deltas
 - training_history.json              : Training loss history and steps
 - training_config.json               : Full training configuration
@@ -1095,6 +1229,8 @@ print("\nContents:")
 print("  📊 metrics_pre_training.json")
 print("  📊 metrics_post_training.json")
 print("  📊 metrics_improvement.json")
+print("  🎯 fuzzy_matches_pre_training.json")
+print("  🎯 fuzzy_matches_post_training.json")
 print("  📈 training_history.json")
 print("  ⚙️  training_config.json")
 print("  🤖 lora_adapter/ (model weights)")
