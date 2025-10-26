@@ -208,7 +208,11 @@ __marimo__/
 
 
 # Project specific
-dataset.jsonl
+# dataset.jsonl
 wandb/
 Qwen/*
-*.jsonl
+# *.jsonl
+llama.cpp/
+results/
+*.gguf
+merged_model/

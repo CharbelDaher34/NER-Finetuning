@@ -1,0 +1,53 @@
+
+TRAINING SUMMARY REPORT
+================================================================================
+
+Training Run: #7
+Results Folder: results/training_results_7
+
+MODEL CONFIGURATION
+================================================================================
+Base Model: Qwen/Qwen3-0.6B
+Output Model: Qwen/Qwen3-0.6B-finetuned
+
+DATASET
+================================================================================
+Training Samples: 4050
+Eval Samples: 450
+Test Samples: 50
+
+PRE-TRAINING METRICS
+================================================================================
+Precision:        0.4063
+Recall:           0.7278
+F1 Score:         0.5215
+Set-Exact-Match:  0.4929
+Valid JSON %:     1.0000
+
+POST-TRAINING METRICS
+================================================================================
+Precision:        0.5194
+Recall:           0.8728
+F1 Score:         0.6512
+Set-Exact-Match:  0.6235
+Valid JSON %:     1.0000
+
+IMPROVEMENT (Post - Pre)
+================================================================================
+Precision:        +0.1131
+Recall:           +0.1450
+F1 Score:         +0.1298
+Set-Exact-Match:  +0.1306
+
+FILES SAVED
+================================================================================
+- metrics_pre_training.json          : Pre-training evaluation summary
+- detailed_results_pre_training.json : Detailed per-question pre-training results
+- metrics_post_training.json         : Post-training evaluation summary
+- detailed_results_post_training.json: Detailed per-question post-training results
+- metrics_improvement.json           : Improvement deltas
+- training_history.json              : Training loss history and steps
+- training_config.json               : Full training configuration
+- lora_adapter/                      : LoRA adapter weights and tokenizer
+- evaluation.log                     : Full evaluation logs
+- summary_report.txt                 : This report

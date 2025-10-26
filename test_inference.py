@@ -51,7 +51,7 @@ print("=" * 80)
 
 try:
     response_text, json_response = infer(
-        model_path="results/training_results_20251024_071121/model.gguf",
+        model_path="./best_model/model.gguf",
         system_prompt=system_prompt,
         report_text=crime_report,
         question=question,
