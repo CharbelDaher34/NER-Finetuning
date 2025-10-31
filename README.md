@@ -12,47 +12,18 @@ Fine-tune Qwen3-0.6B for Named Entity Recognition on crime reports with LoRA, co
 
 ## Installation
 
-### Quick Start
-
 ```bash
 # Clone and navigate to project
 git clone <repository-url>
 cd NER-Finetuning
 
-# Install all dependencies (except llama-cpp-python)
-uv sync
+# Install dependencies
+uv add torch transformers datasets peft trl wandb huggingface-hub python-dotenv rapidfuzz tqdm numpy
+uv add fastapi uvicorn pydantic llama-cpp-python
 
 # Create .env file
 echo "HF_TOKEN=your_huggingface_token" > .env
 echo "WANDB_API_KEY=your_wandb_api_key" >> .env
-```
-
-### Installing llama-cpp-python
-
-#### Windows (CPU Only)
-
-If you're on Windows and want CPU-only support (no CUDA/GPU), use this command:
-
-```powershell
-$env:CMAKE_ARGS="-DGGML_BLAS=OFF -DGGML_CUDA=OFF -DGGML_METAL=OFF"; uv pip install llama-cpp-python --no-build-isolation
-```
-
-Then sync the rest of your dependencies:
-
-```powershell
-uv sync
-```
-
-**Note:** This avoids requiring Visual Studio C++ build tools by using pre-configured builds.
-
-#### Linux/Mac or GPU Support
-
-For Linux/Mac or if you want GPU support, refer to the official documentation:
-- [llama-cpp-python PyPI](https://pypi.org/project/llama-cpp-python/)
-
-For CUDA support on Windows/Linux:
-```bash
-CMAKE_ARGS="-DGGML_CUDA=ON" uv pip install llama-cpp-python --no-build-isolation
 ```
 
 ## Dataset Format

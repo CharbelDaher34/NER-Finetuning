@@ -7,7 +7,7 @@ import json
 import re
 from typing import List, Dict, Optional
 from contextlib import asynccontextmanager
-
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from llama_cpp import Llama
@@ -65,8 +65,13 @@ async def lifespan(app: FastAPI):
     
     # Load GGUF model
     print("Loading GGUF model...")
+    model_path = Path("best_model/model.gguf")
+    if not model_path.exists():
+        raise FileNotFoundError(f"Model file not found at: {model_path}")
+    
+    print(f"Loading model from: {model_path}")
     model = Llama(
-        model_path="./best_model/model.gguf",
+        model_path=str(model_path),
         n_ctx=40960,  # Full context capacity
         n_threads=8,
         n_gpu_layers=-1,  # Use all GPU layers

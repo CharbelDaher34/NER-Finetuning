@@ -1053,7 +1053,7 @@ requires-dist = [
     { name = "fuzzywuzzy", specifier = ">=0.18.0" },
     { name = "gguf", specifier = ">=0.17.1" },
     { name = "huggingface-hub", specifier = ">=0.35.3" },
-    { name = "llama-cpp-python", specifier = "==0.3.2" },
+    { name = "llama-cpp-python", specifier = ">=0.3.2" },
     { name = "nbformat", specifier = ">=5.10.4" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "peft", specifier = ">=0.17.1" },
