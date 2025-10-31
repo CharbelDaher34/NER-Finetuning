@@ -4,6 +4,7 @@ FastAPI app for NER inference using GGUF model.
 Supports multi-turn conversations with proper chat templates.
 """
 import json
+import os
 import re
 from typing import List, Dict, Optional
 from contextlib import asynccontextmanager
@@ -66,15 +67,25 @@ async def lifespan(app: FastAPI):
     # Load GGUF model
     print("Loading GGUF model...")
     model_path = Path("best_model/model.gguf")
-    if not model_path.exists():
-        raise FileNotFoundError(f"Model file not found at: {model_path}")
     
-    print(f"Loading model from: {model_path}")
+    if not model_path.exists():
+        error_msg = (
+            f"Model file not found at: {model_path.resolve()}\n"
+            "The model.gguf file needs to be generated before running the API.\n"
+            "Run: uv run convert_to_gguf.py"
+        )
+        raise FileNotFoundError(error_msg)
+    
+    # Log model file size
+    file_size_mb = model_path.stat().st_size / (1024 * 1024)
+    print(f"Model size: {file_size_mb:.0f} MB")
+    
+    # Load model with absolute path
     model = Llama(
-        model_path=str(model_path),
+        model_path=str(model_path.resolve()),
         n_ctx=40960,  # Full context capacity
         n_threads=8,
-        n_gpu_layers=-1,  # Use all GPU layers
+        n_gpu_layers=-1,  # Use all GPU layers if available
         verbose=False,
     )
     print("✓ GGUF model loaded")
