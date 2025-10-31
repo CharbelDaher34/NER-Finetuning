@@ -183,9 +183,9 @@ def main():
     logger.info("="*80 + "\n")
     
     # Find latest results
-    latest_results = find_latest_results()
-    if not latest_results:
-        return 1
+    # latest_results = find_latest_results()
+    # if not latest_results:
+    #     return 1
     latest_results = "./best_model"
     
     logger.info(f"Using training results: {latest_results}\n")
