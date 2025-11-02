@@ -18,8 +18,7 @@ git clone <repository-url>
 cd NER-Finetuning
 
 # Install dependencies
-uv add torch transformers datasets peft trl wandb huggingface-hub python-dotenv rapidfuzz tqdm numpy
-uv add fastapi uvicorn pydantic llama-cpp-python
+uv sync
 
 # Create .env file
 echo "HF_TOKEN=your_huggingface_token" > .env
@@ -76,7 +75,24 @@ Merges LoRA adapter with base model and converts to GGUF (Q4_K_M quantization).
 
 ### Step 3: Run the API
 
+#### Option A: With Docker
+
 ```bash
+docker compose up
+```
+
+**Note:** Ensure you have completed Steps 1 and 2 to train and convert the model before running the Docker container.
+
+#### Option B: Without Docker
+
+```bash
+# Install dependencies
+uv sync
+
+# Convert model to GGUF (if not already done)
+uv run convert_to_gguf.py
+
+# Run the API
 uv run api.py
 ```
 
@@ -117,22 +133,6 @@ curl -X POST "http://localhost:8000/extract" \
 - **Precision**: BF16
 - **LoRA**: r=16, alpha=32, dropout=0.05
 - **Targets**: q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj
-
-## Troubleshooting
-
-**OOM Errors:**
-- Increase `gradient_accumulation_steps`
-- Reduce `max_seq_length`
-
-**Poor Performance:**
-- Increase `num_train_epochs` or LoRA rank
-- Check dataset quality and JSON formatting
-- Adjust `learning_rate`
-
-**GGUF Conversion:**
-- Verify llama.cpp installation
-- Check LoRA adapter path in script
-- Ensure sufficient disk space
 
 ## Project Structure
 
