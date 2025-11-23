@@ -1,0 +1,12 @@
+{
+  "total_predictions": 2,
+  "examples_processed": 2,
+  "examples_skipped": 0,
+  "avg_similarity": 0.4691426753997803,
+  "avg_length_ratio": 0.653125,
+  "high_similarity_rate": 0.0,
+  "exact_match_rate": 0.0,
+  "valid_rate": 1.0,
+  "min_similarity": 0.286848247051239,
+  "max_similarity": 0.6514371037483215
+}

@@ -105,6 +105,33 @@ class NERDataProcessor(DataProcessor):
         
         return self.tokenizer.apply_chat_template(messages, tokenize=False)
     
+    def format_full_conversation(self, qa_pairs: List[Dict[str, Any]]) -> str:
+        """
+        Format multiple Q&A pairs as a full multi-turn conversation for evaluation.
+        
+        Args:
+            qa_pairs: List of Q&A pairs from parse_example
+            
+        Returns:
+            Formatted text with all Q&A pairs
+        """
+        if not qa_pairs:
+            return ""
+        
+        # Start with system, document, and acknowledgment
+        messages = [
+            {"role": "system", "content": qa_pairs[0]["system_prompt"]},
+            {"role": "user", "content": f"Text:\n{qa_pairs[0]['report']}"},
+            {"role": "assistant", "content": "I've read this text."}
+        ]
+        
+        # Add all Q&A pairs
+        for qa in qa_pairs:
+            messages.append({"role": "user", "content": qa["question"]})
+            messages.append({"role": "assistant", "content": qa["answer"]})
+        
+        return self.tokenizer.apply_chat_template(messages, tokenize=False)
+    
     def format_for_inference(self, input_data: Dict[str, Any]) -> str:
         """
         Format data for inference.

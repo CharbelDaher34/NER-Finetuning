@@ -216,7 +216,50 @@ class Evaluator(ABC):
                     gc.collect()
                     torch.cuda.empty_cache()
         
-        # Calculate final metrics
+        # Calculate final metrics (task-specific implementation via calculate_summary)
+        summary = self.calculate_summary(
+            all_results=all_results,
+            total_predictions=total_predictions,
+            examples_processed=examples_processed,
+            examples_skipped=examples_skipped,
+            total_tp=total_tp,
+            total_fp=total_fp,
+            total_fn=total_fn,
+            total_exact_matches=total_exact_matches,
+            total_valid_predictions=total_valid_predictions,
+            total_schema_valid=total_schema_valid
+        )
+        
+        self.log_summary(summary)
+        
+        return all_results, summary
+    
+    def calculate_summary(self, all_results: List[Dict], total_predictions: int, 
+                         examples_processed: int, examples_skipped: int,
+                         total_tp: int, total_fp: int, total_fn: int,
+                         total_exact_matches: int, total_valid_predictions: int,
+                         total_schema_valid: int) -> Dict:
+        """
+        Calculate summary metrics from evaluation results.
+        
+        Default implementation for classification/extraction tasks (NER-style).
+        Override in subclasses for different metrics (e.g., similarity scores).
+        
+        Args:
+            all_results: List of all prediction results
+            total_predictions: Total number of predictions made
+            examples_processed: Number of examples successfully processed
+            examples_skipped: Number of examples skipped
+            total_tp: Total true positives
+            total_fp: Total false positives
+            total_fn: Total false negatives
+            total_exact_matches: Number of exact matches
+            total_valid_predictions: Number of valid predictions
+            total_schema_valid: Number of schema-valid predictions
+            
+        Returns:
+            Summary dictionary with metrics
+        """
         precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0.0
         recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0.0
         f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
@@ -224,7 +267,7 @@ class Evaluator(ABC):
         valid_rate = total_valid_predictions / total_predictions if total_predictions > 0 else 0.0
         schema_valid_rate = total_schema_valid / total_predictions if total_predictions > 0 else 0.0
         
-        summary = {
+        return {
             "total_predictions": total_predictions,
             "examples_processed": examples_processed,
             "examples_skipped": examples_skipped,
@@ -239,13 +282,17 @@ class Evaluator(ABC):
             "total_fn": total_fn,
             "total_exact_matches": total_exact_matches,
         }
-        
-        self.log_summary(summary)
-        
-        return all_results, summary
     
     def log_summary(self, summary: Dict):
-        """Log evaluation summary."""
+        """
+        Log evaluation summary.
+        
+        Default implementation for classification/extraction tasks (NER-style).
+        Override in subclasses for different logging (e.g., similarity scores).
+        
+        Args:
+            summary: Summary dictionary from calculate_summary()
+        """
         logger.info("\n" + "="*80)
         logger.info("EVALUATION SUMMARY")
         logger.info("="*80)

@@ -138,26 +138,21 @@ class TrainerOrchestrator:
         logger.info(f"Tokenizer configured: pad_token_id={self.tokenizer.pad_token_id}")
     
     def _format_test_conversation(self, row):
-        """Format the full multi-turn conversation for evaluation."""
+        """Format the full multi-turn conversation for evaluation using data processor."""
         if not hasattr(self.data_processor, 'parse_example'):
-            row['text'] = row.get('conversation', '')
+            row['text'] = row.get('text', row.get('conversation', ''))
             return row
             
         qa_pairs = self.data_processor.parse_example(row)
-        if qa_pairs:
-            # Create the full multi-turn conversation with all Q&A pairs
-            messages = [
-                {"role": "system", "content": qa_pairs[0]["system_prompt"]},
-                {"role": "user", "content": f"Text:\n{qa_pairs[0]['report']}"},
-                {"role": "assistant", "content": "I've read this text."}
-            ]
-            
-            # Add all Q&A pairs
-            for qa in qa_pairs:
-                messages.append({"role": "user", "content": qa["question"]})
-                messages.append({"role": "assistant", "content": qa["answer"]})
-            
-            row['text'] = self.tokenizer.apply_chat_template(messages, tokenize=False)
+        if qa_pairs and len(qa_pairs) > 0:
+            # Use format_full_conversation if available (for multi-turn evaluation)
+            # Otherwise fall back to format_for_training for single qa pair
+            if hasattr(self.data_processor, 'format_full_conversation'):
+                row['text'] = self.data_processor.format_full_conversation(qa_pairs)
+            elif hasattr(self.data_processor, 'format_for_training'):
+                row['text'] = self.data_processor.format_for_training(qa_pairs[0])
+            else:
+                row['text'] = ""
         else:
             row['text'] = ""
         return row
@@ -177,28 +172,49 @@ class TrainerOrchestrator:
         )
         logger.info(f"Loaded {len(dataset['train'])} training examples")
         
-        # Split into train/eval
-        split_ratio = self.config.dataset.train_test_split
-        logger.info(f"Splitting dataset: {int((1-split_ratio)*100)}% train / {int(split_ratio*100)}% eval")
-        splits = dataset['train'].train_test_split(test_size=split_ratio, seed=self.config.random_seed)
-        train_raw = splits["train"]
-        eval_raw = splits["test"]
+        # Check if test dataset path is same as train dataset path
+        if self.config.dataset.test_dataset_path == self.config.dataset.train_dataset_path:
+            # Split into train / (eval + test)
+            split_ratio = self.config.dataset.train_test_split
+            logger.info(f"Train and test paths are same - splitting into train/eval/test")
+            logger.info(f"Initial split: {int((1-split_ratio)*100)}% train / {int(split_ratio*100)}% eval+test")
+            
+            splits = dataset['train'].train_test_split(test_size=split_ratio, seed=self.config.random_seed)
+            train_raw = splits["train"]
+            eval_test_raw = splits["test"]
+            
+            # Further split eval+test into eval and test (50/50)
+            eval_test_splits = eval_test_raw.train_test_split(test_size=0.5, seed=self.config.random_seed)
+            eval_raw = eval_test_splits["train"]
+            test_data_raw = eval_test_splits["test"]
+            
+            logger.info(f"Final split: {len(train_raw)} train / {len(eval_raw)} eval / {len(test_data_raw)} test")
+        else:
+            # Different files - use standard split for train/eval
+            split_ratio = self.config.dataset.train_test_split
+            logger.info(f"Splitting dataset: {int((1-split_ratio)*100)}% train / {int(split_ratio*100)}% eval")
+            splits = dataset['train'].train_test_split(test_size=split_ratio, seed=self.config.random_seed)
+            train_raw = splits["train"]
+            eval_raw = splits["test"]
+            
+            # Load separate test dataset
+            logger.info(f"Loading test dataset from {self.config.dataset.test_dataset_path}")
+            test_data = load_dataset(
+                'json',
+                data_files=self.config.dataset.test_dataset_path,
+                keep_in_memory=self.config.dataset.keep_in_memory
+            )
+            test_data_raw = test_data['train']
         
         # Process datasets
         self.train_dataset, self.eval_dataset = self.data_processor.prepare_datasets(train_raw, eval_raw)
+        # self.train_dataset = self.train_dataset.select(range(20))
+        # self.eval_dataset = self.eval_dataset.select(range(2))
         logger.info(f"Processed {len(self.train_dataset)} train examples, {len(self.eval_dataset)} eval examples")
-        
-        # Load test dataset
-        logger.info(f"Loading test dataset from {self.config.dataset.test_dataset_path}")
-        test_data = load_dataset(
-            'json',
-            data_files=self.config.dataset.test_dataset_path,
-            keep_in_memory=self.config.dataset.keep_in_memory
-        )
         
         # Process test dataset with full conversation format
         logger.info("Processing test dataset: formatting for evaluation (keeping multi-turn structure)")
-        self.test_dataset = test_data['train'].map(
+        self.test_dataset = test_data_raw.map(
             lambda row: self._format_test_conversation(row)
         )#.select(range(2))
         logger.info(f"Loaded {len(self.test_dataset)} test examples")
@@ -345,13 +361,13 @@ class TrainerOrchestrator:
                 with open(os.path.join(results_folder, "detailed_results_post_training.json"), 'w') as f:
                     json.dump(results_post, f, indent=2, default=str)
         
-        # Calculate and save improvement
+        # Calculate and save improvement (task-agnostic - compute delta for all numeric metrics)
         if summary_pre and summary_post:
-            improvement = {
-                "precision_delta": summary_post['precision'] - summary_pre['precision'],
-                "recall_delta": summary_post['recall'] - summary_pre['recall'],
-                "f1_delta": summary_post['f1'] - summary_pre['f1'],
-            }
+            improvement = {}
+            for key in summary_post:
+                if key in summary_pre and isinstance(summary_post[key], (int, float)) and isinstance(summary_pre[key], (int, float)):
+                    improvement[f"{key}_delta"] = summary_post[key] - summary_pre[key]
+            
             with open(os.path.join(results_folder, "metrics_improvement.json"), 'w') as f:
                 json.dump(improvement, f, indent=2)
         
@@ -439,15 +455,29 @@ class TrainerOrchestrator:
                 with open(best_metrics_path, 'r') as f:
                     best_metrics = json.load(f)
                 
-                # Compare F1 score (or fallback to other metrics)
-                current_f1 = current_metrics.get('f1', 0.0)
-                best_f1 = best_metrics.get('f1', 0.0)
+                # Determine comparison metric based on task
+                # NER tasks have 'f1', PersonaChat has 'avg_similarity'
+                if 'f1' in current_metrics:
+                    # NER task - compare F1 scores
+                    current_score = current_metrics.get('f1', 0.0)
+                    best_score = best_metrics.get('f1', 0.0)
+                    metric_name = "F1"
+                elif 'avg_similarity' in current_metrics:
+                    # PersonaChat task - compare average similarity
+                    current_score = current_metrics.get('avg_similarity', 0.0)
+                    best_score = best_metrics.get('avg_similarity', 0.0)
+                    metric_name = "Avg Similarity"
+                else:
+                    # Fallback to exact match rate
+                    current_score = current_metrics.get('exact_match_rate', 0.0)
+                    best_score = best_metrics.get('exact_match_rate', 0.0)
+                    metric_name = "Exact Match Rate"
                 
-                if current_f1 > best_f1:
-                    logger.info(f"Current model (F1={current_f1:.4f}) is better than previous best (F1={best_f1:.4f}).")
+                if current_score > best_score:
+                    logger.info(f"Current model ({metric_name}={current_score:.4f}) is better than previous best ({metric_name}={best_score:.4f}).")
                     is_better = True
                 else:
-                    logger.info(f"Current model (F1={current_f1:.4f}) is NOT better than previous best (F1={best_f1:.4f}).")
+                    logger.info(f"Current model ({metric_name}={current_score:.4f}) is NOT better than previous best ({metric_name}={best_score:.4f}).")
             except Exception as e:
                 logger.warning(f"Could not read best model metrics: {e}. Promoting current model.")
                 is_better = True
