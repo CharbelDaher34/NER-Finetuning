@@ -216,4 +216,5 @@ llama.cpp/
 results/
 *.gguf
 merged_model/
-best_model/
+.env
+Qwen/

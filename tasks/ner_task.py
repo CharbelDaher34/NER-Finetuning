@@ -6,9 +6,9 @@ import torch
 from typing import Dict, Any, List, Tuple
 import logging
 
-from data_processor import DataProcessor
-from evaluator import Evaluator
-from metrics import extract_json_from_text, calculate_fuzzy_metrics, normalize_dict_values_to_lists
+from core.data_processor import DataProcessor
+from core.evaluator import Evaluator
+from core.metrics import calculate_fuzzy_metrics, extract_json_from_text, normalize_dict_values_to_lists
 
 
 logger = logging.getLogger(__name__)
