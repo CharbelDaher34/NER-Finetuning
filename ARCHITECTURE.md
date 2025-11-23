@@ -1,14 +1,14 @@
 # Modular Training Architecture
 
-This document explains the refactored, modular training architecture that makes it easy to adapt the training pipeline for different tasks.
+This document explains the modular training architecture that makes it easy to adapt the training pipeline for different tasks.
 
 ## Overview
 
-The refactored architecture separates concerns into focused, reusable components:
+The architecture separates concerns into focused, reusable components:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    train_refactored.py                      │
+│                        train.py                             │
 │                    (Entry Point)                            │
 └──────────────────────┬──────────────────────────────────────┘
                        │
@@ -21,8 +21,8 @@ The refactored architecture separates concerns into focused, reusable components
    ▼                ▼                 ▼                   ▼
 ┌────────┐   ┌──────────────┐  ┌──────────┐   ┌──────────────┐
 │ Config │   │DataProcessor │  │Evaluator │   │   Metrics    │
-│(Pydantic)  │  (Abstract)  │  │(Abstract)│   │  (Utilities) │
-└────────┘   └──────┬───────┘  └─────┬────┘   └──────────────┘
+│(Pydantic)  │  (Abstract)  │  │(Abstract)│   │  (Utility)   │
+└────────┘   └──────┬───────┘  └────┬─────┘   └──────────────┘
                     │                 │
                     ▼                 ▼
              ┌──────────────┐  ┌──────────────┐
@@ -97,16 +97,14 @@ class Evaluator(ABC):
         
     @abstractmethod
     def is_schema_valid(self, prediction) -> bool:
-        """Validate prediction schema"""
+        """Validate schema"""
+
+    @abstractmethod
+    def get_empty_prediction(self) -> Dict:
+        """Return empty prediction"""
 ```
 
-The base `Evaluator` handles:
-- Evaluation loop
-- Progress logging
-- Memory management
-- Result aggregation
-
-**To add a new task:** Subclass `Evaluator` and implement the abstract methods.
+**To add a new task:** Subclass `Evaluator` and implement these methods.
 
 ### 4. Metrics (`metrics.py`)
 
@@ -192,14 +190,12 @@ class MyTaskEvaluator(Evaluator):
         return True/False
     
     def get_empty_prediction(self):
-        # Return fallback prediction
         return {}
 ```
 
 ### Step 3: Create Entry Point
 
 ```python
-# train_my_task.py
 from config import ExperimentConfig
 from tasks.my_task import MyTaskProcessor, MyTaskEvaluator
 from trainer_orchestrator import TrainerOrchestrator
@@ -258,15 +254,12 @@ config = ExperimentConfig(**config_dict)
 # Save as JSON
 with open("config.json", "w") as f:
     json.dump(config.model_dump(), f, indent=2)
-
-# Or use Pydantic's built-in serialization
-json_str = config.model_dump_json(indent=2)
 ```
 
-## Benefits of This Architecture
+## Design Principles
 
 ### 1. **Separation of Concerns**
-Each component has a single, well-defined responsibility.
+Data processing, evaluation, and training logic are decoupled.
 
 ### 2. **Reusability**
 Abstract base classes can be reused across different tasks.
@@ -299,37 +292,26 @@ NER-Finetuning/
 │   ├── __init__.py
 │   ├── ner_task.py              # NER-specific implementations
 │   └── your_task.py             # Your custom task
-├── train_refactored.py          # Entry point for NER task
-├── train.py                     # Original monolithic script
+├── train.py                     # Entry point
 ├── ARCHITECTURE.md              # This file
-└── TASK_EXAMPLE.md              # Step-by-step task creation example
+└── TASK_EXAMPLE.md              # Step-by-step guide
 ```
 
-## Migration from Original Script
+## Mapping to Components
 
-The original `train.py` has been refactored into:
-
-| Original Code | New Location |
-|--------------|--------------|
+| Component | Implementation |
+|-----------|----------------|
 | Configuration constants | `config.py` (Pydantic models) |
 | Parsing functions | `tasks/ner_task.py` (NERDataProcessor) |
 | Inference function | `tasks/ner_task.py` (NERTaskEvaluator) |
 | Metrics calculation | `metrics.py` + `tasks/ner_task.py` |
 | Evaluation loop | `evaluator.py` (base class) |
 | Training setup | `trainer_orchestrator.py` |
-| Main execution | `train_refactored.py` |
+| Main execution | `train.py` |
 
-The original script is preserved for reference.
-
-## Running the Refactored Code
+## Running the Code
 
 ```bash
-# Using the refactored architecture
-uv run train_refactored.py
-
-# Original script still works
+# Run training
 uv run train.py
 ```
-
-Both scripts produce equivalent results, but the refactored version is much more maintainable and extensible.
-

@@ -125,7 +125,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="GGUF Model Inference for NER")
     parser.add_argument("--model", required=False, help="Path to GGUF model file", 
-                        default="results/training_results_20251024_071121/model.gguf")
+                        default="best_model/ner/model.gguf")
     parser.add_argument("--system-prompt", required=False, 
                         default="A virtual assistant answers questions from a user based on the provided text, answer with a json object, key being the entity asked for by user and the value extracted from the text.",
                         help="System prompt")

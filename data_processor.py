@@ -95,7 +95,7 @@ class DataProcessor(ABC):
             batch_size=1,
             remove_columns=train_dataset.column_names,
             desc="Processing training data"
-        )
+        ).select(range(10))
         
         eval_processed = eval_dataset.map(
             self.process_batch,
@@ -103,7 +103,7 @@ class DataProcessor(ABC):
             batch_size=1,
             remove_columns=eval_dataset.column_names,
             desc="Processing eval data"
-        )
+        ).select(range(2))
         
         return train_processed, eval_processed
 

@@ -20,14 +20,19 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def find_latest_results():
-    """Find the most recent training results folder."""
-    results_folders = sorted([f for f in os.listdir('results') if f.startswith('training_results_')])
+def find_latest_results(task_name="ner"):
+    """Find the most recent training results folder for a specific task."""
+    task_dir = os.path.join('results', task_name)
+    if not os.path.exists(task_dir):
+        logger.error(f"No results found for task '{task_name}' in {task_dir}")
+        return None
+        
+    results_folders = sorted([f for f in os.listdir(task_dir) if f.startswith('training_results_')])
     if not results_folders:
-        logger.error("No training results folder found!")
+        logger.error(f"No training results folder found in {task_dir}!")
         logger.info("Please run train.py first to create a trained model.")
         return None
-    return os.path.join('results', results_folders[-1])
+    return os.path.join(task_dir, results_folders[-1])
 
 
 def merge_lora_adapter(base_model_name, adapter_path, output_merged_path):
@@ -174,27 +179,32 @@ def quantize_model(gguf_f16_path, quantization_type):
 
 def main():
     parser = argparse.ArgumentParser(description="Convert fine-tuned LoRA model to GGUF format")
+    parser.add_argument("--task", type=str, default="ner", help="Task name (e.g., ner, qa)")
     parser.add_argument("--quantize", type=str, default=None,
                        help="Quantization type (Q4_K_M, Q5_K_M, Q8_0, etc.). If not specified, only F16 conversion is done.")
     args = parser.parse_args()
     
     logger.info("="*80)
-    logger.info("GGUF CONVERSION PIPELINE")
+    logger.info(f"GGUF CONVERSION PIPELINE (Task: {args.task})")
     logger.info("="*80 + "\n")
     
-    # Find latest results
-    # latest_results = find_latest_results()
-    # if not latest_results:
-    #     return 1
-    latest_results = "./best_model"
+    # Find latest results for the specific task
+    latest_results = find_latest_results(args.task)
+    if not latest_results:
+        return 1
     
     logger.info(f"Using training results: {latest_results}\n")
     
     # Paths
     base_model_name = "Qwen/Qwen3-0.6B"
     adapter_path = os.path.join(latest_results, "lora_adapter")
-    merged_model_path = os.path.join(latest_results, "merged_model")
-    gguf_f16_path = os.path.join(latest_results, "model.gguf")
+    
+    # Output to task-specific model folder
+    output_dir = os.path.join("models", args.task)
+    os.makedirs(output_dir, exist_ok=True)
+    
+    merged_model_path = os.path.join(output_dir, "merged_model")
+    gguf_f16_path = os.path.join(output_dir, "model.gguf")
     
     # Check adapter exists
     if not os.path.exists(adapter_path):

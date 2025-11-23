@@ -66,18 +66,24 @@ async def lifespan(app: FastAPI):
     
     # Load GGUF model
     print("Loading GGUF model...")
-    model_path = Path("best_model/model.gguf")
+    
+    # Get task name from environment variable or default to "ner"
+    task_name = os.getenv("TASK_NAME", "ner")
+    model_path = Path(f"best_model/{task_name}/model.gguf")
     
     if not model_path.exists():
         error_msg = (
             f"Model file not found at: {model_path.resolve()}\n"
             "The model.gguf file needs to be generated before running the API.\n"
-            "Run: uv run convert_to_gguf.py"
+            f"Run: uv run train.py (with task_name='{task_name}')\n"
+            "The training will automatically convert to GGUF if it's the best model."
         )
         raise FileNotFoundError(error_msg)
     
     # Log model file size
     file_size_mb = model_path.stat().st_size / (1024 * 1024)
+    print(f"Task: {task_name}")
+    print(f"Model path: {model_path}")
     print(f"Model size: {file_size_mb:.0f} MB")
     
     # Load model with absolute path

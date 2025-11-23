@@ -107,6 +107,7 @@ class GenerationConfig(BaseModel):
 
 class ExperimentConfig(BaseModel):
     """Top-level experiment configuration."""
+    task_name: str = Field(default="ner", description="Name of the task (e.g., ner, qa)")
     random_seed: int = Field(default=42, description="Random seed for reproducibility")
     output_dir: str = Field(default="results", description="Output directory for results")
     

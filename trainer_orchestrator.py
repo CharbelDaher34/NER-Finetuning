@@ -198,9 +198,9 @@ class TrainerOrchestrator:
         
         # Process test dataset with full conversation format
         logger.info("Processing test dataset: formatting for evaluation (keeping multi-turn structure)")
-        self.test_dataset = test_data['train'].select(range(2)).map(
+        self.test_dataset = test_data['train'].map(
             lambda row: self._format_test_conversation(row)
-        )
+        ).select(range(2))
         logger.info(f"Loaded {len(self.test_dataset)} test examples")
     
     def setup_trainer(self):
@@ -246,6 +246,7 @@ class TrainerOrchestrator:
             max_length=self.config.dataset.max_seq_length,
             packing=False,
             report_to=self.config.monitoring.report_to,
+            dataloader_num_workers=0,
         )
         
         logger.info("Initializing SFTTrainer")
@@ -314,17 +315,18 @@ class TrainerOrchestrator:
                     results_post: Optional[list], summary_post: Optional[dict]):
         """Save all results to disk."""
         # Determine training number
+        task_dir = os.path.join(self.config.output_dir, self.config.task_name)
         last_number = 0
         try:
-            if os.path.exists(self.config.output_dir):
-                for folder in os.listdir(self.config.output_dir):
+            if os.path.exists(task_dir):
+                for folder in os.listdir(task_dir):
                     if folder.startswith("training_results_"):
                         last_number = max(last_number, int(folder.split("_")[-1]))
             training_number = last_number + 1
         except (FileNotFoundError, ValueError, IndexError):
             training_number = 1
         
-        results_folder = os.path.join(self.config.output_dir, f"training_results_{training_number}")
+        results_folder = os.path.join(task_dir, f"training_results_{training_number}")
         os.makedirs(results_folder, exist_ok=True)
         logger.info(f"Saving results to: {results_folder}")
         
@@ -402,6 +404,10 @@ class TrainerOrchestrator:
             # Save everything
             results_folder = self.save_results(results_pre, summary_pre, results_post, summary_post)
             
+            # Check if this is the best model and promote it
+            if summary_post:
+                self.check_and_promote_best_model(results_folder, summary_post)
+            
             # Cleanup
             if hasattr(self, 'wandb_run') and self.wandb_run is not None:
                 wandb.finish()
@@ -414,4 +420,95 @@ class TrainerOrchestrator:
             if hasattr(self, 'wandb_run') and self.wandb_run is not None:
                 wandb.finish(exit_code=1)
             raise
+
+    def check_and_promote_best_model(self, current_results_folder: str, current_metrics: dict):
+        """
+        Check if current model is better than existing best model, and if so, promote it.
+        Also triggers GGUF conversion for the best model.
+        """
+        best_model_dir = os.path.join("best_model", self.config.task_name)
+        best_metrics_path = os.path.join(best_model_dir, "metrics.json")
+        
+        is_better = False
+        
+        if not os.path.exists(best_metrics_path):
+            logger.info("No existing best model found. Promoting current model to best.")
+            is_better = True
+        else:
+            try:
+                with open(best_metrics_path, 'r') as f:
+                    best_metrics = json.load(f)
+                
+                # Compare F1 score (or fallback to other metrics)
+                current_f1 = current_metrics.get('f1', 0.0)
+                best_f1 = best_metrics.get('f1', 0.0)
+                
+                if current_f1 > best_f1:
+                    logger.info(f"Current model (F1={current_f1:.4f}) is better than previous best (F1={best_f1:.4f}).")
+                    is_better = True
+                else:
+                    logger.info(f"Current model (F1={current_f1:.4f}) is NOT better than previous best (F1={best_f1:.4f}).")
+            except Exception as e:
+                logger.warning(f"Could not read best model metrics: {e}. Promoting current model.")
+                is_better = True
+        
+        if is_better:
+            self.promote_to_best_model(current_results_folder, best_model_dir, current_metrics)
+            self.run_gguf_conversion(best_model_dir)
+
+    def promote_to_best_model(self, source_folder: str, target_folder: str, metrics: dict):
+        """Copy model files to best_model directory."""
+        logger.info(f"Promoting model to: {target_folder}")
+        
+        if os.path.exists(target_folder):
+            shutil.rmtree(target_folder)
+        os.makedirs(target_folder, exist_ok=True)
+        
+        # Copy LoRA adapter
+        src_adapter = os.path.join(source_folder, "lora_adapter")
+        dst_adapter = os.path.join(target_folder, "lora_adapter")
+        if os.path.exists(src_adapter):
+            shutil.copytree(src_adapter, dst_adapter)
+            
+        # Save metrics
+        with open(os.path.join(target_folder, "metrics.json"), 'w') as f:
+            json.dump(metrics, f, indent=2)
+            
+        logger.info("✓ Model promoted successfully")
+
+    def run_gguf_conversion(self, model_folder: str):
+        """Run GGUF conversion on the promoted model."""
+        logger.info("Starting GGUF conversion for best model...")
+        
+        try:
+            # Import here to avoid circular imports or early failures
+            from convert_to_gguf import merge_lora_adapter, convert_to_gguf_f16
+            
+            adapter_path = os.path.join(model_folder, "lora_adapter")
+            merged_path = os.path.join(model_folder, "merged_model")
+            gguf_path = os.path.join(model_folder, "model.gguf")
+            
+            # 1. Merge
+            if not os.path.exists(merged_path):
+                success = merge_lora_adapter(
+                    self.config.model.base_model,
+                    adapter_path,
+                    merged_path
+                )
+                if not success:
+                    logger.error("Failed to merge model during auto-conversion")
+                    return
+            
+            # 2. Convert
+            if not os.path.exists(gguf_path):
+                success = convert_to_gguf_f16(merged_path, gguf_path)
+                if success:
+                    logger.info(f"✓ Auto-conversion complete: {gguf_path}")
+                else:
+                    logger.error("Failed to convert model to GGUF")
+            else:
+                logger.info("GGUF model already exists")
+                
+        except Exception as e:
+            logger.error(f"Error during auto-conversion: {e}")
 

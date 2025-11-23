@@ -1,149 +1,294 @@
-# NER Fine-Tuning Project
+# Modular Training Framework
 
-Fine-tune Qwen3-0.6B for Named Entity Recognition on crime reports with LoRA, convert to GGUF, and serve via FastAPI.
+A clean, extensible training framework for fine-tuning language models on any task.
 
-## Features
+## Quick Start
 
-- Multi-turn conversational training with Q&A format
-- LoRA-based fine-tuning for memory efficiency
-- Fuzzy matching evaluation (85% similarity threshold)
-- GGUF conversion for optimized inference
-- FastAPI REST endpoint
-
-## Installation
+### Run the NER Task
 
 ```bash
-# Clone and navigate to project
-git clone <repository-url>
-cd NER-Finetuning
-
-# Install dependencies
+# Install dependencies (if not already installed)
 uv sync
 
-# Create .env file
-echo "HF_TOKEN=your_huggingface_token" > .env
-echo "WANDB_API_KEY=your_wandb_api_key" >> .env
-```
-
-## Dataset Format
-
-JSONL format with multi-turn conversations. Each line:
-
-```json
-{
-  "conversation": "You are an assistant that extracts entities from crime reports.\nUser: Text:\n[Crime report text]\nAssistant: I've read this text.\nUser: Extract all locations mentioned.\nAssistant: {\"locations\": [\"Main Street\", \"Downtown\"]}\nUser: Extract all dates mentioned.\nAssistant: {\"dates\": [\"January 15, 2024\"]}"
-}
-```
-
-**Structure:**
-1. System prompt with instructions
-2. User: `Text:\n[document]`
-3. Assistant: `I've read this text.`
-4. User: Question about entities
-5. Assistant: JSON response `{"entity_type": ["value1", "value2"]}`
-
-**Required files:**
-- `dataset.jsonl` - Training data
-- `test_dataset.jsonl` - Test data
-
-## Usage
-
-### Step 1: Train the Model
-
-```bash
+# Run training
 uv run train.py
 ```
 
-**Outputs:** `results/training_results_N/`
-- `lora_adapter/` - Model weights
-- `metrics_*.json` - Evaluation results
-- `training_history.json` - Training logs
-- `summary_report.txt` - Summary
+## Architecture
 
-**Training Config:**
-- Batch size: 1, Gradient accumulation: 16
-- Learning rate: 2.4e-5, LoRA rank: 16
-- Max sequence length: 1536, Epochs: 6
+The framework is built on three key abstractions:
 
-### Step 2: Convert to GGUF
+1. **DataProcessor**: Handles task-specific data parsing and formatting
+2. **Evaluator**: Handles task-specific evaluation and metrics
+3. **TrainerOrchestrator**: Coordinates the entire pipeline
 
-```bash
-uv run convert_to_gguf.py
+```python
+from config import ExperimentConfig
+from tasks.your_task import YourDataProcessor, YourEvaluator
+from trainer_orchestrator import TrainerOrchestrator
+
+# Configure
+config = ExperimentConfig()
+config.model.base_model = "your-model"
+
+# Setup task
+processor = YourDataProcessor(tokenizer=None)
+evaluator = YourEvaluator(config, None, None, processor)
+
+# Run
+orchestrator = TrainerOrchestrator(config, processor, evaluator)
+orchestrator.run()
 ```
 
-Merges LoRA adapter with base model and converts to GGUF (Q4_K_M quantization).
+## Features
 
-### Step 3: Run the API
-
-#### Option A: With Docker
-
-```bash
-docker compose up
-```
-
-**Note:** Ensure you have completed Steps 1 and 2 to train and convert the model before running the Docker container.
-
-#### Option B: Without Docker
-
-```bash
-# Install dependencies
-uv sync
-
-# Convert model to GGUF (if not already done)
-uv run convert_to_gguf.py
-
-# Run the API
-uv run api.py
-```
-
-API runs at `http://localhost:8000`
-
-**Example request:**
-```bash
-curl -X POST "http://localhost:8000/extract" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "On January 15, 2024, officers responded to 123 Main Street.",
-    "question": "Extract all dates and locations mentioned."
-  }'
-```
-
-**Response:**
-```json
-{
-  "entities": {
-    "dates": ["January 15, 2024"],
-    "locations": ["123 Main Street"]
-  },
-  "raw_response": "{\"dates\": [\"January 15, 2024\"], \"locations\": [\"123 Main Street\"]}"
-}
-```
-
-## Evaluation Metrics
-
-- **Precision/Recall/F1**: Entity extraction accuracy with fuzzy matching
-- **Set-Exact-Match**: Percentage of perfect predictions
-- **Empty-Set Accuracy**: Accuracy when no entities present
-- **Valid JSON %**: Percentage of valid JSON responses
-- **Schema Valid %**: Percentage following expected schema
-
-## Model Configuration
-
-- **Base Model**: Qwen/Qwen3-0.6B
-- **Precision**: BF16
-- **LoRA**: r=16, alpha=32, dropout=0.05
-- **Targets**: q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj
+✅ **Pydantic Configuration** - Type-safe, validated configuration  
+✅ **Abstract Base Classes** - Easy to extend for new tasks  
+✅ **Automatic Evaluation** - Pre and post-training metrics  
+✅ **W&B Integration** - Automatic logging and tracking  
+✅ **Memory Efficient** - Gradient checkpointing, 8-bit optimizer  
+✅ **LoRA Fine-Tuning** - Parameter-efficient training  
+✅ **Early Stopping** - Prevent overfitting  
+✅ **Fuzzy Matching** - Robust entity evaluation (NER task)  
 
 ## Project Structure
 
 ```
 NER-Finetuning/
-├── train.py              # Training script
-├── convert_to_gguf.py    # GGUF conversion
-├── api.py                # FastAPI server
-├── inference_gguf.py     # GGUF inference
-├── dataset.jsonl         # Training data
-├── test_dataset.jsonl    # Test data
-├── .env                  # Environment variables
-└── results/              # Training outputs
+├── config.py                   # Pydantic configuration models
+├── data_processor.py           # Abstract data processor
+├── evaluator.py                # Abstract evaluator
+├── metrics.py                  # Reusable metrics utilities
+├── trainer_orchestrator.py     # Training coordinator
+├── tasks/
+│   ├── ner_task.py            # NER task implementation
+│   └── your_task.py           # Your custom task
+├── train.py                   # Entry point
+├── ARCHITECTURE.md            # Detailed architecture guide
+└── TASK_EXAMPLE.md            # Step-by-step task creation example
 ```
+
+## Creating a New Task
+
+See [TASK_EXAMPLE.md](TASK_EXAMPLE.md) for a complete walkthrough.
+
+**TL;DR:**
+
+```python
+# 1. Implement DataProcessor
+class MyDataProcessor(DataProcessor):
+    def parse_example(self, example): ...
+    def format_for_training(self, data): ...
+    def format_for_inference(self, data): ...
+
+# 2. Implement Evaluator
+class MyEvaluator(Evaluator):
+    def parse_dataset_example(self, example): ...
+    def generate_prediction(self, model, context, question): ...
+    def calculate_metrics(self, pred, gt): ...
+    def is_valid_prediction(self, pred): ...
+    def is_schema_valid(self, pred): ...
+    def get_empty_prediction(self): ...
+
+# 3. Create entry point
+config = ExperimentConfig()
+processor = MyDataProcessor(tokenizer=None)
+evaluator = MyEvaluator(config, None, None, processor)
+orchestrator = TrainerOrchestrator(config, processor, evaluator)
+orchestrator.run()
+```
+
+## Configuration
+
+All parameters are configured via Pydantic models:
+
+```python
+from config import ExperimentConfig
+
+config = ExperimentConfig()
+
+# Model
+config.model.base_model = "Qwen/Qwen3-0.6B"
+config.model.torch_dtype = "bfloat16"
+
+# Training
+config.training.num_train_epochs = 4
+config.training.learning_rate = 5e-5
+config.training.per_device_train_batch_size = 2
+
+# LoRA
+config.lora.r = 16
+config.lora.lora_alpha = 32
+config.lora.lora_dropout = 0.1
+
+# Monitoring
+config.monitoring.wandb_project_name = "My Project"
+config.monitoring.early_stopping_patience = 3
+
+# Evaluation
+config.evaluation.fuzzy_match_threshold = 85.0
+```
+
+### Load from JSON
+
+```python
+import json
+from config import ExperimentConfig
+
+with open("my_config.json") as f:
+    config = ExperimentConfig(**json.load(f))
+```
+
+### Save to JSON
+
+```python
+with open("config.json", "w") as f:
+    json.dump(config.model_dump(), f, indent=2)
+```
+
+## Configuration Options
+
+<details>
+<summary><b>Model Configuration</b></summary>
+
+```python
+config.model.base_model = "Qwen/Qwen3-0.6B"
+config.model.new_model = "Qwen/Qwen3-0.6B-finetuned"
+config.model.torch_dtype = "bfloat16"  # or "float16", "float32"
+config.model.attn_implementation = "sdpa"  # or "eager", "flash_attention_2"
+```
+</details>
+
+<details>
+<summary><b>Dataset Configuration</b></summary>
+
+```python
+config.dataset.train_dataset_path = "./dataset.jsonl"
+config.dataset.test_dataset_path = "./test_dataset.jsonl"
+config.dataset.max_seq_length = 1536
+config.dataset.train_test_split = 0.1  # 10% for eval
+```
+</details>
+
+<details>
+<summary><b>LoRA Configuration</b></summary>
+
+```python
+config.lora.r = 16
+config.lora.lora_alpha = 32
+config.lora.lora_dropout = 0.1
+config.lora.target_modules = [
+    "q_proj", "k_proj", "v_proj", "o_proj",
+    "gate_proj", "up_proj", "down_proj"
+]
+```
+</details>
+
+<details>
+<summary><b>Training Configuration</b></summary>
+
+```python
+config.training.num_train_epochs = 4
+config.training.learning_rate = 5e-5
+config.training.per_device_train_batch_size = 2
+config.training.gradient_accumulation_steps = 8
+config.training.optimizer = "adamw_8bit"
+config.training.bf16 = True
+```
+</details>
+
+<details>
+<summary><b>Generation Configuration</b></summary>
+
+```python
+config.generation.max_new_tokens = 256
+config.generation.temperature = 0.1
+config.generation.top_p = 0.95
+config.generation.repetition_penalty = 1.1
+```
+</details>
+
+## Advanced Usage
+
+### Custom Metrics
+
+Override the `calculate_metrics` method in your evaluator:
+
+```python
+class MyEvaluator(Evaluator):
+    def calculate_metrics(self, predicted, ground_truth):
+        # Your custom metric logic
+        return {
+            "tp": true_positives,
+            "fp": false_positives,
+            "fn": false_negatives,
+            "custom_score": my_score,
+        }
+```
+
+### Multi-Stage Training
+
+```python
+# Stage 1: Quick training
+config.training.num_train_epochs = 2
+config.training.learning_rate = 1e-4
+orchestrator.run()
+
+# Stage 2: Fine-tune with lower LR
+config.training.num_train_epochs = 5
+config.training.learning_rate = 1e-5
+orchestrator.run()
+```
+
+### Skip Evaluations
+
+```python
+# Skip pre-training eval (faster iteration)
+config.evaluation.run_pre_training_eval = False
+
+# Skip post-training eval (if you only want to train)
+config.evaluation.run_post_training_eval = False
+```
+
+## Documentation
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed architecture explanation
+- **[TASK_EXAMPLE.md](TASK_EXAMPLE.md)** - Step-by-step task creation guide
+
+## Environment Variables
+
+Create a `.env` file:
+
+```env
+HF_TOKEN=your_huggingface_token
+WANDB_API_KEY=your_wandb_key
+```
+
+## Requirements
+
+- Python 3.10+
+- PyTorch 2.0+
+- Transformers
+- PEFT
+- TRL
+- Pydantic 2.0+
+- RapidFuzz (for fuzzy matching)
+
+Install with:
+```bash
+uv sync
+```
+
+## License
+
+Same as original project.
+
+## Contributing
+
+To add a new task:
+1. Create `tasks/your_task.py`
+2. Implement `DataProcessor` and `Evaluator`
+3. Create `train_your_task.py`
+4. Submit PR!
+
+See [TASK_EXAMPLE.md](TASK_EXAMPLE.md) for details.

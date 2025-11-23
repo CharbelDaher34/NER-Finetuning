@@ -365,19 +365,7 @@ The core infrastructure handles everything else:
 - W&B logging
 - Results saving
 
-## Comparison with Original Architecture
 
-### Before (Monolithic)
-- **800+ lines** in single file
-- Hard-coded for NER task
-- Difficult to adapt
-- Tightly coupled components
-
-### After (Modular)
-- **~150 lines** per task
-- Task-agnostic infrastructure
-- Easy to extend
-- Clear separation of concerns
 
 ## Next Steps
 
