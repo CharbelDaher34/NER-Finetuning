@@ -1,7 +1,7 @@
 """
-Test client for the NER Inference API.
+Test client for the Multi-Task Inference API.
 
-Demonstrates single-turn and multi-turn conversations.
+Tests both NER and PersonaChat endpoints.
 """
 import requests
 import json
@@ -9,7 +9,7 @@ import json
 
 API_URL = "http://localhost:8347"
 
-# Sample crime report
+# Sample crime report for NER
 CRIME_REPORT = """**Crime Type:** Theft  
 **Date and Time:** September 30, 2025, at 14:30  
 **Location:** 455 Elm Street, Cedar Falls  
@@ -26,6 +26,14 @@ CRIME_REPORT = """**Crime Type:** Theft
 **Conclusion:** The case remains open as authorities continue to pursue leads related to the theft.  
 **Signature:** Officer Sarah Walden"""
 
+# Sample persona for PersonaChat
+PERSONA = [
+    "I am an artist.",
+    "I love painting landscapes.",
+    "I live in a small studio in Paris.",
+    "I enjoy drinking coffee at sidewalk cafes."
+]
+
 
 def test_health():
     """Test health check endpoint."""
@@ -38,10 +46,10 @@ def test_health():
     print(json.dumps(response.json(), indent=2))
 
 
-def test_single_turn():
-    """Test single-turn conversation (one question)."""
+def test_ner_single_turn():
+    """Test NER single-turn conversation."""
     print("\n" + "="*80)
-    print("Testing Single-Turn Conversation")
+    print("Testing NER Single-Turn")
     print("="*80)
     
     payload = {
@@ -51,8 +59,8 @@ def test_single_turn():
         "temperature": 0.0
     }
     
-    print("\nSending request...")
-    response = requests.post(f"{API_URL}/infer", json=payload)
+    print("\nSending request to /ner...")
+    response = requests.post(f"{API_URL}/ner", json=payload)
     
     if response.status_code == 200:
         result = response.json()
@@ -69,10 +77,10 @@ def test_single_turn():
         return None
 
 
-def test_multi_turn():
-    """Test multi-turn conversation (multiple questions)."""
+def test_ner_multi_turn():
+    """Test NER multi-turn conversation."""
     print("\n" + "="*80)
-    print("Testing Multi-Turn Conversation")
+    print("Testing NER Multi-Turn")
     print("="*80)
     
     # First question
@@ -84,7 +92,7 @@ def test_multi_turn():
         "temperature": 0.0
     }
     
-    response = requests.post(f"{API_URL}/infer", json=payload)
+    response = requests.post(f"{API_URL}/ner", json=payload)
     
     if response.status_code != 200:
         print(f"✗ Error: {response.status_code}")
@@ -100,37 +108,14 @@ def test_multi_turn():
     # Second question - using conversation history
     print("\n--- Question 2: Officer Name ---")
     payload = {
-        "report_text": CRIME_REPORT,  # Still needed for reference
-        "question": "What describes Officer_Name in the text?",
-        "conversation_history": conversation_history,  # Include previous turns
-        "max_tokens": 512,
-        "temperature": 0.0
-    }
-    
-    response = requests.post(f"{API_URL}/infer", json=payload)
-    
-    if response.status_code != 200:
-        print(f"✗ Error: {response.status_code}")
-        print(response.text)
-        return
-    
-    result = response.json()
-    print("Answer:", json.dumps(result["json_response"], indent=2))
-    
-    # Update conversation history
-    conversation_history = result["conversation_history"]
-    
-    # Third question
-    print("\n--- Question 3: Crime Type ---")
-    payload = {
         "report_text": CRIME_REPORT,
-        "question": "What describes Crime_Type in the text?",
+        "question": "What describes Officer_Name in the text?",
         "conversation_history": conversation_history,
         "max_tokens": 512,
         "temperature": 0.0
     }
     
-    response = requests.post(f"{API_URL}/infer", json=payload)
+    response = requests.post(f"{API_URL}/ner", json=payload)
     
     if response.status_code != 200:
         print(f"✗ Error: {response.status_code}")
@@ -140,54 +125,72 @@ def test_multi_turn():
     result = response.json()
     print("Answer:", json.dumps(result["json_response"], indent=2))
     
-    print("\n✓ Multi-turn conversation completed!")
-    print(f"Total conversation turns: {len(result['conversation_history'])}")
+    print("\n✓ NER Multi-turn conversation completed!")
 
 
-def test_batch_questions():
-    """Test extracting multiple entities."""
+def test_persona_chat():
+    """Test PersonaChat conversation."""
     print("\n" + "="*80)
-    print("Testing Batch Entity Extraction")
+    print("Testing PersonaChat")
     print("="*80)
     
-    questions = [
-        "What describes Location in the text?",
-        "What describes Officer_Name in the text?",
-        "What describes Officer_BadgeNumber in the text?",
-        "What describes Victim_Name in the text?",
-        "What describes Crime_Type in the text?",
-    ]
+    print("Persona:")
+    for p in PERSONA:
+        print(f"- {p}")
     
-    results = {}
+    # Turn 1
+    message1 = "I have all artists and paris and coffess"
+    print(f"\nUser: {message1}")
     
-    for i, question in enumerate(questions, 1):
-        print(f"\n[{i}/{len(questions)}] {question}")
-        
-        payload = {
-            "report_text": CRIME_REPORT,
-            "question": question,
-            "max_tokens": 512,
-            "temperature": 0.0
-        }
-        
-        response = requests.post(f"{API_URL}/infer", json=payload)
-        
-        if response.status_code == 200:
-            result = response.json()
-            results.update(result["json_response"])
-            print("  ✓", json.dumps(result["json_response"], indent=2))
-        else:
-            print(f"  ✗ Error: {response.status_code}")
+    payload = {
+        "persona": PERSONA,
+        "message": message1,
+        "max_tokens": 128,
+        "temperature": 0.7
+    }
     
-    print("\n" + "="*80)
-    print("All Extracted Entities:")
-    print("="*80)
-    print(json.dumps(results, indent=2))
+    response = requests.post(f"{API_URL}/persona", json=payload)
+    
+    if response.status_code != 200:
+        print(f"✗ Error: {response.status_code}")
+        print(response.text)
+        return
+    
+    result = response.json()
+    response1 = result["raw_response"]
+    print(f"Assistant: {response1}")
+    
+    conversation_history = result["conversation_history"]
+    
+    # Turn 2
+    message2 = "That sounds lovely. Do you have a favorite place to paint?"
+    print(f"\nUser: {message2}")
+    
+    payload = {
+        "persona": PERSONA,
+        "message": message2,
+        "conversation_history": conversation_history,
+        "max_tokens": 128,
+        "temperature": 0.7
+    }
+    
+    response = requests.post(f"{API_URL}/persona", json=payload)
+    
+    if response.status_code != 200:
+        print(f"✗ Error: {response.status_code}")
+        print(response.text)
+        return
+    
+    result = response.json()
+    response2 = result["raw_response"]
+    print(f"Assistant: {response2}")
+    
+    print("\n✓ PersonaChat conversation completed!")
 
 
 if __name__ == "__main__":
     print("\n" + "="*80)
-    print("NER API Test Client")
+    print("Multi-Task API Test Client")
     print("="*80)
     print(f"API URL: {API_URL}")
     print("\nMake sure the API is running:")
@@ -197,9 +200,9 @@ if __name__ == "__main__":
     try:
         # Test endpoints
         test_health()
-        test_single_turn()
-        test_multi_turn()
-        test_batch_questions()
+        # test_ner_single_turn()
+        # test_ner_multi_turn()
+        test_persona_chat()
         
         print("\n" + "="*80)
         print("All tests completed!")

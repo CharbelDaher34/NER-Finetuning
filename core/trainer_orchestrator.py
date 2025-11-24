@@ -232,6 +232,7 @@ class TrainerOrchestrator:
         )
         
         logger.info("Setting up training configuration")
+    
         sft_config = SFTConfig(
             output_dir=self.config.model.new_model,
             per_device_train_batch_size=self.config.training.per_device_train_batch_size,
@@ -281,8 +282,17 @@ class TrainerOrchestrator:
             callbacks=[early_stopping],
         )
         
+        
         # Update model reference to LoRA-wrapped model
         self.model = self.trainer.model
+        
+        # Monkey-patch to disable model card creation (workaround for missing template files)
+        def _dummy_create_or_update_model_card(self, *args, **kwargs):
+            """Disabled model card creation to avoid missing template file errors."""
+            pass
+        
+        self.model.create_or_update_model_card = _dummy_create_or_update_model_card.__get__(self.model)
+        logger.info("Disabled model card creation (missing template file workaround)")
         logger.info("Trainer initialized successfully")
     
     def run_evaluation(self, stage: str = "pre") -> tuple[list, dict]:
